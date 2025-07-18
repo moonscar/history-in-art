@@ -16,7 +16,7 @@ L.Icon.Default.mergeOptions({
 interface InteractiveWorldMapProps {
   artworks: Artwork[];
   timeRange: TimeRange;
-  onLocationTimeSelect: (location: string, timeRange: TimeRange, artworks: Artwork[]) => void;
+  onLocationTimeSelect: (location: string, timeRange: TimeRange) => void;
   onArtworkSelect: (artwork: Artwork) => void;
 }
 
@@ -172,7 +172,7 @@ const InteractiveWorldMap: React.FC<InteractiveWorldMapProps> = ({
 
   const handleLocationClick = (locationArtworks: Artwork[]) => {
     const location = locationArtworks[0].location.country;
-    onLocationTimeSelect(location, timeRange, locationArtworks);
+    onLocationTimeSelect(location, timeRange);
   };
 
   const handleMapClick = (lat: number, lng: number) => {
@@ -198,7 +198,7 @@ const InteractiveWorldMap: React.FC<InteractiveWorldMapProps> = ({
     );
     
     if (locationArtworks.length > 0) {
-      onLocationTimeSelect(clickedLocation.country, timeRange, locationArtworks);
+      onLocationTimeSelect(clickedLocation.country, timeRange);
     } else {
       // Show a message if no artworks found for this location/time combination
       alert(`在 ${clickedLocation.city}, ${clickedLocation.country} (${timeRange.start}-${timeRange.end}) 未找到艺术品`);
