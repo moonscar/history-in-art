@@ -60,6 +60,29 @@ function App() {
     }
   };
 
+  const handleLocationTimeUpdate = (location: string, timeRange: TimeRange) => {
+    // 更新时间轴
+    setTimeRange(timeRange);
+    
+    // 更新查询参数
+    setChatQuery(prev => ({
+      ...prev,
+      location,
+      timeRange
+    }));
+    
+    // 自动显示该地区的艺术品结果
+    setTimeout(async () => {
+      const locationArtworks = await getArtworksByLocation(location, timeRange);
+      setResultsData({
+        artworks: locationArtworks,
+        location,
+        timeRange
+      });
+      setShowResults(true);
+    }, 500); // 给时间让筛选条件先更新
+  };
+
   const handleLocationTimeSelect = async (location: string, currentTimeRange: TimeRange) => {
     const locationArtworks = await getArtworksByLocation(location, currentTimeRange);
     setResultsData({
@@ -162,6 +185,7 @@ function App() {
           <div className="absolute top-6 right-6 z-20 w-80">
             <ChatInterface
               onQueryUpdate={handleChatQuery}
+              onLocationTimeUpdate={handleLocationTimeUpdate}
             />
           </div>
         </div>

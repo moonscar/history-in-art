@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Send, MessageCircle, Bot, User, ChevronDown, ChevronUp } from 'lucide-react';
+import { OpenAIService } from '../services/openaiService';
 
 interface Message {
   id: string;
@@ -15,14 +16,15 @@ interface ChatInterfaceProps {
     movement?: string;
     artist?: string;
   }) => void;
+  onLocationTimeUpdate?: (location: string, timeRange: { start: number; end: number }) => void;
 }
 
-const ChatInterface: React.FC<ChatInterfaceProps> = ({ onQueryUpdate }) => {
+const ChatInterface: React.FC<ChatInterfaceProps> = ({ onQueryUpdate, onLocationTimeUpdate }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [messages, setMessages] = useState<Message[]>([
     {
       id: '1',
-      text: '您好！我是您的艺术品导航助手。您可以通过自然语言告诉我您想要查找的艺术品，比如："显示文艺复兴时期意大利的画作"或"查找梵高在1880-1890年间的作品"。',
+      text: '您好！我是您的AI艺术品导航助手。您可以通过自然语言告诉我您想要查找的艺术品，比如："显示文艺复兴时期意大利的画作"或"查找19世纪法国的印象派作品"。我会智能解析您的需求并自动定位到相应的地点和时间。',
       sender: 'bot',
       timestamp: new Date()
     }
@@ -39,71 +41,42 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ onQueryUpdate }) => {
     scrollToBottom();
   }, [messages]);
 
-  // 模拟AI处理用户查询
+  // 使用OpenAI处理用户查询
   const processUserQuery = async (query: string) => {
     setIsLoading(true);
     
-    // 模拟API调用延迟
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    
-    // 简单的关键词匹配逻辑（实际应用中会调用真实的AI API）
-    const queryLower = query.toLowerCase();
-    let response = '';
-    let queryParams: any = {};
-
-    // 时间范围识别
-    if (queryLower.includes('文艺复兴') || queryLower.includes('renaissance')) {
-      queryParams.timeRange = { start: 1400, end: 1600 };
-      response += '已设置时间范围为文艺复兴时期（1400-1600年）。';
-    } else if (queryLower.includes('巴洛克') || queryLower.includes('baroque')) {
-      queryParams.timeRange = { start: 1600, end: 1750 };
-      response += '已设置时间范围为巴洛克时期（1600-1750年）。';
-    } else if (queryLower.includes('现代') || queryLower.includes('modern')) {
-      queryParams.timeRange = { start: 1900, end: 1980 };
-      response += '已设置时间范围为现代艺术时期（1900-1980年）。';
+    try {
+      const aiResponse = await OpenAIService.processUserQuery(query);
+      
+      // 构建查询参数
+      const queryParams: any = {};
+      
+      if (aiResponse.location) {
+        queryParams.location = aiResponse.location;
+      }
+      
+      if (aiResponse.timeRange) {
+        queryParams.timeRange = aiResponse.timeRange;
+      }
+      
+      // 更新主界面筛选条件
+      if (Object.keys(queryParams).length > 0) {
+        onQueryUpdate(queryParams);
+        
+        // 如果同时有地点和时间信息，触发地图和时间轴的联动更新
+        if (aiResponse.location && aiResponse.timeRange && onLocationTimeUpdate) {
+          onLocationTimeUpdate(aiResponse.location, aiResponse.timeRange);
+        }
+      }
+      
+      setIsLoading(false);
+      return aiResponse.message;
+      
+    } catch (error) {
+      console.error('Error processing query:', error);
+      setIsLoading(false);
+      return '抱歉，处理您的查询时出现了问题。请稍后再试或检查网络连接。';
     }
-
-    // 地点识别
-    if (queryLower.includes('意大利') || queryLower.includes('italy')) {
-      queryParams.location = 'Italy';
-      response += '已筛选意大利地区的艺术品。';
-    } else if (queryLower.includes('法国') || queryLower.includes('france')) {
-      queryParams.location = 'France';
-      response += '已筛选法国地区的艺术品。';
-    } else if (queryLower.includes('日本') || queryLower.includes('japan')) {
-      queryParams.location = 'Japan';
-      response += '已筛选日本地区的艺术品。';
-    }
-
-    // 艺术家识别
-    if (queryLower.includes('达芬奇') || queryLower.includes('leonardo')) {
-      queryParams.artist = 'Leonardo da Vinci';
-      response += '已筛选达芬奇的作品。';
-    } else if (queryLower.includes('梵高') || queryLower.includes('van gogh')) {
-      queryParams.artist = 'Vincent van Gogh';
-      response += '已筛选梵高的作品。';
-    } else if (queryLower.includes('毕加索') || queryLower.includes('picasso')) {
-      queryParams.artist = 'Pablo Picasso';
-      response += '已筛选毕加索的作品。';
-    }
-
-    // 艺术流派识别
-    if (queryLower.includes('印象派') || queryLower.includes('impressionism')) {
-      queryParams.movement = 'Impressionism';
-      response += '已筛选印象派作品。';
-    } else if (queryLower.includes('立体派') || queryLower.includes('cubism')) {
-      queryParams.movement = 'Cubism';
-      response += '已筛选立体派作品。';
-    }
-
-    if (!response) {
-      response = '抱歉，我没有理解您的查询。请尝试使用更具体的描述，比如时间期间、地点或艺术家名称。';
-    } else {
-      onQueryUpdate(queryParams);
-    }
-
-    setIsLoading(false);
-    return response;
   };
 
   const handleSendMessage = async () => {
@@ -220,7 +193,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ onQueryUpdate }) => {
                 value={inputText}
                 onChange={(e) => setInputText(e.target.value)}
                 onKeyPress={handleKeyPress}
-                placeholder="输入您的查询，例如：显示文艺复兴时期意大利的画作..."
+                placeholder="例如：显示文艺复兴时期意大利的画作，或查找19世纪法国印象派作品..."
                 className="flex-1 bg-gray-800 text-white rounded-lg px-4 py-2 border border-gray-600 focus:border-blue-500 focus:outline-none text-sm"
                 disabled={isLoading}
               />
