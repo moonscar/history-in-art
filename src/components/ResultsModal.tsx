@@ -1,3 +1,5 @@
+'use client';
+
 import React, { useState, useMemo } from 'react';
 import { Artwork } from '../types';
 import { X, Filter, MapPin, Calendar, User, Palette, RotateCcw } from 'lucide-react';

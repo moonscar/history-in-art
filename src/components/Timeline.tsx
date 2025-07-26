@@ -1,3 +1,5 @@
+'use client';
+
 import React, { useState, useRef, useEffect } from 'react';
 import { TimeRange, HistoricalPeriod } from '../types';
 import { historicalPeriods } from '../data/periods';

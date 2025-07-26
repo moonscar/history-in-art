@@ -1,17 +1,35 @@
-import React, { useEffect, useState } from 'react';
-import { MapContainer, TileLayer, Marker, Popup, useMap, useMapEvents } from 'react-leaflet';
-import L from 'leaflet';
-import { Artwork, TimeRange } from '../types';
-import { MapPin, Image as ImageIcon, Calendar, User } from 'lucide-react';
-import 'leaflet/dist/leaflet.css';
+'use client';
 
-// Fix for default markers in React Leaflet
-delete (L.Icon.Default.prototype as any)._getIconUrl;
-L.Icon.Default.mergeOptions({
-  iconRetinaUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png',
-  iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png',
-  shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
-});
+import React, { useEffect, useState } from 'react';
+import dynamic from 'next/dynamic';
+import { Artwork, TimeRange } from '../types';
+import { MapPin, Calendar } from 'lucide-react';
+
+// Dynamically import map components to avoid SSR issues
+const MapContainer = dynamic(
+  () => import('react-leaflet').then((mod) => mod.MapContainer),
+  { ssr: false }
+);
+
+const TileLayer = dynamic(
+  () => import('react-leaflet').then((mod) => mod.TileLayer),
+  { ssr: false }
+);
+
+const Marker = dynamic(
+  () => import('react-leaflet').then((mod) => mod.Marker),
+  { ssr: false }
+);
+
+const Popup = dynamic(
+  () => import('react-leaflet').then((mod) => mod.Popup),
+  { ssr: false }
+);
+
+const useMapEvents = dynamic(
+  () => import('react-leaflet').then((mod) => mod.useMapEvents),
+  { ssr: false }
+);
 
 interface InteractiveWorldMapProps {
   artworks: Artwork[];
@@ -20,85 +38,11 @@ interface InteractiveWorldMapProps {
   onArtworkSelect: (artwork: Artwork) => void;
 }
 
-// Custom marker icons for different periods
-const createCustomIcon = (period: string) => {
-  const colors: { [key: string]: string } = {
-    'Ancient': '#8B5A2B',
-    'Medieval': '#4A5568',
-    'Renaissance': '#D69E2E',
-    'Baroque': '#C53030',
-    'Neoclassical': '#3182CE',
-    'Impressionism': '#38A169',
-    'Post-Impressionism': '#38A169',
-    'Modern': '#805AD5',
-    'Contemporary': '#E53E3E',
-    'Surrealism': '#805AD5',
-    'Edo Period': '#2D3748'
-  };
-
-  const color = colors[period] || '#6366F1';
-  
-  return L.divIcon({
-    html: `
-      <div style="
-        width: 20px;
-        height: 20px;
-        background: ${color};
-        border: 3px solid white;
-        border-radius: 50%;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.3);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-      ">
-        <div style="
-          width: 8px;
-          height: 8px;
-          background: white;
-          border-radius: 50%;
-        "></div>
-      </div>
-    `,
-    className: 'custom-marker',
-    iconSize: [20, 20],
-    iconAnchor: [10, 10],
-    popupAnchor: [0, -10]
-  });
-};
-
-// City location marker
-const createCityMarker = () => {
-  return L.divIcon({
-    html: `
-      <div style="
-        width: 12px;
-        height: 12px;
-        background: #3B82F6;
-        border: 2px solid white;
-        border-radius: 50%;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.3);
-        animation: pulse 2s infinite;
-      "></div>
-      <style>
-        @keyframes pulse {
-          0% { transform: scale(1); opacity: 1; }
-          50% { transform: scale(1.2); opacity: 0.7; }
-          100% { transform: scale(1); opacity: 1; }
-        }
-      </style>
-    `,
-    className: 'city-marker',
-    iconSize: [12, 12],
-    iconAnchor: [6, 6],
-    popupAnchor: [0, -6]
-  });
-};
-
 // Component to handle map click events
 const MapClickHandler: React.FC<{
   onLocationClick: (lat: number, lng: number) => void;
 }> = ({ onLocationClick }) => {
-  useMapEvents({
+  const map = useMapEvents({
     click: (e) => {
       const { lat, lng } = e.latlng;
       onLocationClick(lat, lng);
@@ -107,23 +51,18 @@ const MapClickHandler: React.FC<{
   return null;
 };
 
-// Component to get country name from coordinates (simplified)
+// Get country name from coordinates (simplified)
 const getCountryFromCoordinates = (lat: number, lng: number): string => {
-  // Simplified country detection based on coordinates
-  // In a real application, you would use a reverse geocoding service
   if (lat >= 35 && lat <= 47 && lng >= 6 && lng <= 19) return 'Italy';
   if (lat >= 42 && lat <= 51 && lng >= -5 && lng <= 8) return 'France';
   if (lat >= 36 && lat <= 44 && lng >= -10 && lng <= 4) return 'Spain';
   if (lat >= 50 && lat <= 54 && lng >= 3 && lng <= 7) return 'Netherlands';
   if (lat >= 30 && lat <= 46 && lng >= 129 && lng <= 146) return 'Japan';
   if (lat >= 25 && lat <= 49 && lng >= -125 && lng <= -66) return 'United States';
-  
   return 'Unknown Location';
 };
 
-// Get city name from coordinates
 const getCityFromCoordinates = (lat: number, lng: number): string => {
-  // Simplified city detection based on coordinates
   if (lat >= 43.7 && lat <= 43.8 && lng >= 11.2 && lng <= 11.3) return 'Florence';
   if (lat >= 43.7 && lat <= 43.8 && lng >= 4.8 && lng <= 4.9) return 'Saint-Rémy-de-Provence';
   if (lat >= 40.4 && lat <= 40.5 && lng >= -3.8 && lng <= -3.6) return 'Madrid';
@@ -132,7 +71,6 @@ const getCityFromCoordinates = (lat: number, lng: number): string => {
   if (lat >= 40.9 && lat <= 41.0 && lng >= -92.3 && lng <= -92.1) return 'Eldon';
   if (lat >= 42.2 && lat <= 42.3 && lng >= 2.9 && lng <= 3.0) return 'Figueres';
   
-  // Fallback to country-based city mapping
   const country = getCountryFromCoordinates(lat, lng);
   const cityMap: { [key: string]: string } = {
     'Italy': 'Florence',
@@ -159,6 +97,100 @@ const InteractiveWorldMap: React.FC<InteractiveWorldMapProps> = ({
     city: string;
     country: string;
   } | null>(null);
+  const [L, setL] = useState<any>(null);
+
+  useEffect(() => {
+    // Dynamically import Leaflet to avoid SSR issues
+    import('leaflet').then((leaflet) => {
+      // Fix for default markers in React Leaflet
+      delete (leaflet.Icon.Default.prototype as any)._getIconUrl;
+      leaflet.Icon.Default.mergeOptions({
+        iconRetinaUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png',
+        iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png',
+        shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
+      });
+      setL(leaflet);
+      setMapLoaded(true);
+    });
+  }, []);
+
+  // Custom marker icons for different periods
+  const createCustomIcon = (period: string) => {
+    if (!L) return null;
+    
+    const colors: { [key: string]: string } = {
+      'Ancient': '#8B5A2B',
+      'Medieval': '#4A5568',
+      'Renaissance': '#D69E2E',
+      'Baroque': '#C53030',
+      'Neoclassical': '#3182CE',
+      'Impressionism': '#38A169',
+      'Post-Impressionism': '#38A169',
+      'Modern': '#805AD5',
+      'Contemporary': '#E53E3E',
+      'Surrealism': '#805AD5',
+      'Edo Period': '#2D3748'
+    };
+
+    const color = colors[period] || '#6366F1';
+    
+    return L.divIcon({
+      html: `
+        <div style="
+          width: 20px;
+          height: 20px;
+          background: ${color};
+          border: 3px solid white;
+          border-radius: 50%;
+          box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        ">
+          <div style="
+            width: 8px;
+            height: 8px;
+            background: white;
+            border-radius: 50%;
+          "></div>
+        </div>
+      `,
+      className: 'custom-marker',
+      iconSize: [20, 20],
+      iconAnchor: [10, 10],
+      popupAnchor: [0, -10]
+    });
+  };
+
+  // City location marker
+  const createCityMarker = () => {
+    if (!L) return null;
+    
+    return L.divIcon({
+      html: `
+        <div style="
+          width: 12px;
+          height: 12px;
+          background: #3B82F6;
+          border: 2px solid white;
+          border-radius: 50%;
+          box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+          animation: pulse 2s infinite;
+        "></div>
+        <style>
+          @keyframes pulse {
+            0% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.2); opacity: 0.7; }
+            100% { transform: scale(1); opacity: 1; }
+          }
+        </style>
+      `,
+      className: 'city-marker',
+      iconSize: [12, 12],
+      iconAnchor: [6, 6],
+      popupAnchor: [0, -6]
+    });
+  };
 
   // Group artworks by location to create clusters
   const artworksByLocation = artworks.reduce((acc, artwork) => {
@@ -190,7 +222,6 @@ const InteractiveWorldMap: React.FC<InteractiveWorldMapProps> = ({
   const handleCityClick = () => {
     if (!clickedLocation) return;
     
-    // Filter artworks by the clicked location and current time range
     const locationArtworks = artworks.filter(artwork => 
       artwork.location.country === clickedLocation.country &&
       artwork.year >= timeRange.start && 
@@ -200,13 +231,22 @@ const InteractiveWorldMap: React.FC<InteractiveWorldMapProps> = ({
     if (locationArtworks.length > 0) {
       onLocationTimeSelect(clickedLocation.country, timeRange);
     } else {
-      // Show a message if no artworks found for this location/time combination
       alert(`在 ${clickedLocation.city}, ${clickedLocation.country} (${timeRange.start}-${timeRange.end}) 未找到艺术品`);
     }
     
-    // Clear the clicked location after query
     setClickedLocation(null);
   };
+
+  if (!mapLoaded) {
+    return (
+      <div className="absolute inset-0 bg-gray-800 flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-8 h-8 border-2 border-blue-400 border-t-transparent rounded-full animate-spin mx-auto mb-2"></div>
+          <p className="text-gray-400 text-sm">Loading world map...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="absolute inset-0">
@@ -236,7 +276,6 @@ const InteractiveWorldMap: React.FC<InteractiveWorldMapProps> = ({
           zoom={2}
           style={{ height: '100%', width: '100%' }}
           className="z-10"
-          whenReady={() => setMapLoaded(true)}
         >
           <TileLayer
             url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
@@ -307,12 +346,10 @@ const InteractiveWorldMap: React.FC<InteractiveWorldMapProps> = ({
                             <h4 className="font-medium text-white text-sm truncate">
                               {artwork.title}
                             </h4>
-                            <div className="flex items-center text-xs text-gray-300 mt-1">
-                              <User size={10} className="mr-1" />
+                            <div className="text-xs text-gray-300 mt-1">
                               {artwork.artist}
                             </div>
-                            <div className="flex items-center text-xs text-gray-400 mt-1">
-                              <Calendar size={10} className="mr-1" />
+                            <div className="text-xs text-gray-400 mt-1">
                               {artwork.year} • {artwork.period}
                             </div>
                           </div>
@@ -332,15 +369,6 @@ const InteractiveWorldMap: React.FC<InteractiveWorldMapProps> = ({
             );
           })}
         </MapContainer>
-        
-        {!mapLoaded && (
-          <div className="absolute inset-0 bg-gray-800 flex items-center justify-center">
-            <div className="text-center">
-              <div className="w-8 h-8 border-2 border-blue-400 border-t-transparent rounded-full animate-spin mx-auto mb-2"></div>
-              <p className="text-gray-400 text-sm">Loading world map...</p>
-            </div>
-          </div>
-        )}
       </div>
 
       {/* Map Legend */}

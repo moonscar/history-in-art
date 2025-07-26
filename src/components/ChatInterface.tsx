@@ -1,6 +1,7 @@
+'use client';
+
 import React, { useState, useRef, useEffect } from 'react';
 import { Send, MessageCircle, Bot, User, ChevronDown, ChevronUp } from 'lucide-react';
-import { OpenAIService } from '../services/openaiService';
 
 interface Message {
   id: string;
@@ -41,12 +42,24 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ onQueryUpdate, onLocation
     scrollToBottom();
   }, [messages]);
 
-  // 使用OpenAI处理用户查询
+  // Process user query using Next.js API route
   const processUserQuery = async (query: string) => {
     setIsLoading(true);
     
     try {
-      const aiResponse = await OpenAIService.processUserQuery(query);
+      const response = await fetch('/api/chat', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ message: query }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to process query');
+      }
+
+      const aiResponse = await response.json();
       
       // 构建查询参数
       const queryParams: any = {};

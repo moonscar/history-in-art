@@ -1,3 +1,5 @@
+'use client';
+
 import { useState, useEffect, useCallback } from 'react';
 import { Artwork, TimeRange } from '../types';
 import { ArtworkService } from '../services/artworkService';
