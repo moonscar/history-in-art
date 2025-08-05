@@ -192,35 +192,62 @@ export class ArtworkService {
   }
 
   // Get artwork counts by country for heatmap
+  // static async getArtworkCountsByCountry(filters?: {
+  //   timeRange?: TimeRange;
+  // }): Promise<{ [country: string]: number }> {
+  //   try {
+  //     let query = supabase
+  //       .from('artworks')
+  //       .select('country, count(*)')
+  //       .not('country', 'is', null);
+
+  //     // Apply time range filter if provided
+  //     if (filters?.timeRange) {
+  //       query = query
+  //         .gte('creation_year', filters.timeRange.start)
+  //         .lte('creation_year', filters.timeRange.end);
+  //     }
+
+  //     const { data, error } = await query;
+
+  //     if (error) {
+  //       console.error('Error fetching artwork counts by country:', error);
+  //       return {};
+  //     }
+
+  //     // Count artworks by country
+  //     const countryCounts: { [country: string]: number } = {};
+  //     data.forEach(item => {
+  //       if (item.country) {
+  //         countryCounts[item.country] = (countryCounts[item.country] || 0) + 1;
+  //       }
+  //     });
+
+  //     return countryCounts;
+  //   } catch (error) {
+  //     console.error('Error in getArtworkCountsByCountry:', error);
+  //     return {};
+  //   }
+  // }
+
   static async getArtworkCountsByCountry(filters?: {
     timeRange?: TimeRange;
   }): Promise<{ [country: string]: number }> {
     try {
-      let query = supabase
-        .from('artworks')
-        .select('country')
-        .not('country', 'is', null);
-
-      // Apply time range filter if provided
-      if (filters?.timeRange) {
-        query = query
-          .gte('creation_year', filters.timeRange.start)
-          .lte('creation_year', filters.timeRange.end);
-      }
-
-      const { data, error } = await query;
+      const { data, error } = await supabase.rpc('get_artwork_counts_by_country', {
+        start_year: filters?.timeRange?.start || null,
+        end_year: filters?.timeRange?.end || null
+      });
 
       if (error) {
         console.error('Error fetching artwork counts by country:', error);
         return {};
       }
 
-      // Count artworks by country
+      // Convert array result to object format
       const countryCounts: { [country: string]: number } = {};
-      data.forEach(item => {
-        if (item.country) {
-          countryCounts[item.country] = (countryCounts[item.country] || 0) + 1;
-        }
+      data.forEach((item: { country: string; count: number }) => {
+        countryCounts[item.country] = item.count;
       });
 
       return countryCounts;
