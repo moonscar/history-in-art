@@ -111,16 +111,21 @@ const MapClickHandler: React.FC<{
 
 // Component to get country name from coordinates (simplified)
 const getCountryFromCoordinates = (lat: number, lng: number): string => {
-  // Simplified country detection based on coordinates
-  // In a real application, you would use a reverse geocoding service
-  if (lat >= 35 && lat <= 47 && lng >= 6 && lng <= 19) return 'Italy';
-  if (lat >= 42 && lat <= 51 && lng >= -5 && lng <= 8) return 'France';
-  if (lat >= 36 && lat <= 44 && lng >= -10 && lng <= 4) return 'Spain';
-  if (lat >= 50 && lat <= 54 && lng >= 3 && lng <= 7) return 'Netherlands';
-  if (lat >= 30 && lat <= 46 && lng >= 129 && lng <= 146) return 'Japan';
-  if (lat >= 25 && lat <= 49 && lng >= -125 && lng <= -66) return 'United States';
-  
-  return 'Unknown Location';
+  try {
+    const clickPoint = turf.point([lng, lat]);
+    
+    // 在 worldCountries 数据中查找包含该点的国家
+    for (const feature of worldCountries.features) {
+      if (turf.booleanPointInPolygon(clickPoint, feature)) {
+        return feature.properties.NAME || feature.properties.name || 'Unknown';
+      }
+    }
+    
+    return 'Unknown Location';
+  } catch (error) {
+    console.error('Error in coordinate detection:', error);
+    return 'Unknown Location';
+  }
 };
 
 // Get city name from coordinates
@@ -179,6 +184,9 @@ const InteractiveWorldMap: React.FC<InteractiveWorldMapProps> = ({
        Object.entries(rawCounts).filter(([location]) => validCountries.has(location))
       );
 
+      console.log("原始记录", rawCounts);
+      console.log("显示记录", filteredCounts);
+
       setCountryCounts(filteredCounts);
     };
 
@@ -187,11 +195,11 @@ const InteractiveWorldMap: React.FC<InteractiveWorldMapProps> = ({
 
   // Get color based on artwork count
   const getHeatmapColor = (count: number): string => {
-    if (count === 0) return '#374151'; // Gray for no artworks
-    if (count === 1) return '#3B82F6'; // Blue for 1 artwork
-    if (count === 2) return '#10B981'; // Green for 2 artworks
-    if (count === 3) return '#F59E0B'; // Yellow for 3 artworks
-    if (count >= 4) return '#EF4444'; // Red for 4+ artworks
+    if (count <= 10) return '#374151'; // Gray for no artworks
+    if (count <= 100) return '#3B82F6'; // Blue for 1 artwork
+    if (count <= 200) return '#10B981'; // Green for 2 artworks
+    if (count <= 300) return '#F59E0B'; // Yellow for 3 artworks
+    if (count >= 300) return '#EF4444'; // Red for 4+ artworks
     return '#374151';
   };
 
@@ -211,8 +219,6 @@ const InteractiveWorldMap: React.FC<InteractiveWorldMapProps> = ({
       fillOpacity: showHeatmap ? 0.7 : 0.1
     };
   };
-
-  console.log(countryStyle);
 
   // Handle country click
   const onCountryClick = (feature: any, layer: any) => {
