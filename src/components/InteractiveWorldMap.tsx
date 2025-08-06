@@ -5,7 +5,9 @@ import { Artwork, TimeRange } from '../types';
 import { MapPin, Image as ImageIcon, Calendar, User, BarChart3 } from 'lucide-react';
 import { ArtworkService } from '../services/artworkService';
 import worldCountries from '../data/world-countries.json';
+import cities from '../data/cities.json';
 import 'leaflet/dist/leaflet.css';
+import { booleanPointInPolygon, point } from '@turf/boolean-point-in-polygon';
 
 // Fix for default markers in React Leaflet
 delete (L.Icon.Default.prototype as any)._getIconUrl;
@@ -113,14 +115,14 @@ const MapClickHandler: React.FC<{
 const getCountryFromCoordinates = (lat: number, lng: number): string => {
   try {
     const clickPoint = turf.point([lng, lat]);
-    
+
     // 在 worldCountries 数据中查找包含该点的国家
     for (const feature of worldCountries.features) {
       if (turf.booleanPointInPolygon(clickPoint, feature)) {
         return feature.properties.NAME || feature.properties.name || 'Unknown';
       }
     }
-    
+
     return 'Unknown Location';
   } catch (error) {
     console.error('Error in coordinate detection:', error);
@@ -138,7 +140,7 @@ const getCityFromCoordinates = (lat: number, lng: number): string => {
   if (lat >= 35.6 && lat <= 35.7 && lng >= 139.6 && lng <= 139.8) return 'Tokyo';
   if (lat >= 40.9 && lat <= 41.0 && lng >= -92.3 && lng <= -92.1) return 'Eldon';
   if (lat >= 42.2 && lat <= 42.3 && lng >= 2.9 && lng <= 3.0) return 'Figueres';
-  
+
   // Fallback to country-based city mapping
   const country = getCountryFromCoordinates(lat, lng);
   const cityMap: { [key: string]: string } = {
@@ -193,24 +195,100 @@ const InteractiveWorldMap: React.FC<InteractiveWorldMapProps> = ({
     fetchCountryCounts();
   }, [timeRange]);
 
-  // Get color based on artwork count
-  const getHeatmapColor = (count: number): string => {
-    if (count <= 10) return '#374151'; // Gray for no artworks
-    if (count <= 100) return '#3B82F6'; // Blue for 1 artwork
-    if (count <= 200) return '#10B981'; // Green for 2 artworks
-    if (count <= 300) return '#F59E0B'; // Yellow for 3 artworks
-    if (count >= 300) return '#EF4444'; // Red for 4+ artworks
-    return '#374151';
+  // 计算动态分级断点
+  const calculateBreakpoints = (counts: number[]): number[] => {
+    if (counts.length === 0) return [0, 1, 5, 10, 50];
+
+    const sortedCounts = counts.sort((a, b) => a - b);
+    const minCount = sortedCounts[0];
+    const maxCount = sortedCounts[sortedCounts.length - 1];
+
+    // 如果所有值都相同，返回简单分级
+    if (minCount === maxCount) {
+      return minCount === 0 ? [0, 1] : [0, Math.ceil(minCount / 2), minCount];
+    }
+
+    // 使用分位数方法计算断点
+    const getPercentile = (arr: number[], percentile: number): number => {
+      const index = Math.ceil(arr.length * percentile) - 1;
+      return arr[Math.max(0, index)];
+    };
+
+    return [
+      0, // 无数据
+      getPercentile(sortedCounts, 0.2), // 20分位数
+      getPercentile(sortedCounts, 0.4), // 40分位数
+      getPercentile(sortedCounts, 0.6), // 60分位数
+      getPercentile(sortedCounts, 0.8), // 80分位数
+      maxCount // 最大值
+    ].filter((value, index, arr) => index === 0 || value > arr[index - 1]); // 去重
   };
 
-  // Get max count for legend
+  // 获取当前数据的断点
+  const counts = Object.values(countryCounts).filter(count => count > 0);
+  const breakpoints = calculateBreakpoints(counts);
+
+  // Get color based on artwork count (动态版本)
+  const getHeatmapColor = (count: number): string => {
+    const colors = ['#374151', '#3B82F6', '#10B981', '#F59E0B', '#EF4444', '#DC2626'];
+
+    if (count === 0) return colors[0]; // Gray for no artworks
+
+    // 根据断点确定颜色
+    for (let i = breakpoints.length - 1; i >= 1; i--) {
+      if (count >= breakpoints[i]) {
+        return colors[Math.min(i, colors.length - 1)];
+      }
+    }
+
+    return colors[1]; // 默认第一级颜色
+  };
+
+  // 生成图例标签
+  const generateLegendLabels = (): Array<{color: string, label: string, range: [number, number]}> => {
+    const colors = ['#374151', '#3B82F6', '#10B981', '#F59E0B', '#EF4444', '#DC2626'];
+    const labels: Array<{color: string, label: string, range: [number, number]}> = [];
+
+    // 无数据
+    labels.push({
+      color: colors[0],
+      label: '无艺术品',
+      range: [0, 0]
+    });
+
+    // 动态分级标签
+    for (let i = 1; i < breakpoints.length; i++) {
+      const start = i === 1 ? 1 : breakpoints[i - 1] + 1;
+      const end = breakpoints[i];
+      
+      let label: string;
+      if (i === breakpoints.length - 1) {
+        label = `${start}+ 件`;
+      } else {
+        label = start === end ? `${start} 件` : `${start}-${end} 件`;
+      }
+      
+      labels.push({
+        color: colors[Math.min(i, colors.length - 1)],
+        label,
+        range: [start, end]
+      });
+    }
+
+    return labels;
+  };
+
+  // Get max count for reference
   const maxCount = Math.max(...Object.values(countryCounts), 0);
 
-  // Style function for GeoJSON countries
+  // 获取图例数据
+  const legendData = generateLegendLabels();
+
+  // Style function for GeoJSON countries (保持不变)
   const countryStyle = (feature: any) => {
     const countryName = feature.properties.name;
     const count = countryCounts[countryName] || 0;
-    
+
     return {
       fillColor: getHeatmapColor(count),
       weight: 1,
@@ -224,11 +302,11 @@ const InteractiveWorldMap: React.FC<InteractiveWorldMapProps> = ({
   const onCountryClick = (feature: any, layer: any) => {
     const countryName = feature.properties.NAME;
     const count = countryCounts[countryName] || 0;
-    
+
     if (count > 0) {
       onLocationTimeSelect(countryName, timeRange);
     }
-    
+
     // Show popup with country info
     const popup = L.popup()
       .setContent(`
@@ -238,7 +316,7 @@ const InteractiveWorldMap: React.FC<InteractiveWorldMapProps> = ({
           ${count > 0 ? '<button onclick="window.queryCountry(\'' + countryName + '\')" class="w-full bg-blue-600 hover:bg-blue-700 text-white py-1 px-2 rounded text-sm">查看艺术品</button>' : '<p class="text-gray-500 text-xs">该时期无艺术品</p>'}
         </div>
       `);
-    
+
     layer.bindPopup(popup);
   };
 
@@ -247,7 +325,7 @@ const InteractiveWorldMap: React.FC<InteractiveWorldMapProps> = ({
     (window as any).queryCountry = (countryName: string) => {
       onLocationTimeSelect(countryName, timeRange);
     };
-    
+
     return () => {
       delete (window as any).queryCountry;
     };
@@ -271,7 +349,8 @@ const InteractiveWorldMap: React.FC<InteractiveWorldMapProps> = ({
   const handleMapClick = (lat: number, lng: number) => {
     const country = getCountryFromCoordinates(lat, lng);
     const city = getCityFromCoordinates(lat, lng);
-    
+    console.log(country, city);
+
     setClickedLocation({
       lat,
       lng,
@@ -282,21 +361,21 @@ const InteractiveWorldMap: React.FC<InteractiveWorldMapProps> = ({
 
   const handleCityClick = () => {
     if (!clickedLocation) return;
-    
+
     // Filter artworks by the clicked location and current time range
     const locationArtworks = artworks.filter(artwork => 
       artwork.location.country === clickedLocation.country &&
       artwork.year >= timeRange.start && 
       artwork.year <= timeRange.end
     );
-    
+
     if (locationArtworks.length > 0) {
       onLocationTimeSelect(clickedLocation.country, timeRange);
     } else {
       // Show a message if no artworks found for this location/time combination
       alert(`在 ${clickedLocation.city}, ${clickedLocation.country} (${timeRange.start}-${timeRange.end}) 未找到艺术品`);
     }
-    
+
     // Clear the clicked location after query
     setClickedLocation(null);
   };
@@ -328,40 +407,27 @@ const InteractiveWorldMap: React.FC<InteractiveWorldMapProps> = ({
             <BarChart3 size={16} />
           </button>
         </div>
-        
+
         {showHeatmap && (
           <div className="border-t border-gray-600 pt-3">
             <div className="text-xs text-gray-400 mb-2">热力图 - 艺术品数量</div>
             <div className="grid grid-cols-2 gap-1 text-xs">
-              <div className="flex items-center text-gray-300">
-                <div className="w-3 h-3 rounded mr-2" style={{ backgroundColor: '#374151' }}></div>
-                0 件
-              </div>
-              <div className="flex items-center text-gray-300">
-                <div className="w-3 h-3 rounded mr-2" style={{ backgroundColor: '#3B82F6' }}></div>
-                1 件
-              </div>
-              <div className="flex items-center text-gray-300">
-                <div className="w-3 h-3 rounded mr-2" style={{ backgroundColor: '#10B981' }}></div>
-                2 件
-              </div>
-              <div className="flex items-center text-gray-300">
-                <div className="w-3 h-3 rounded mr-2" style={{ backgroundColor: '#F59E0B' }}></div>
-                3 件
-              </div>
-              <div className="flex items-center text-gray-300">
-                <div className="w-3 h-3 rounded mr-2" style={{ backgroundColor: '#EF4444' }}></div>
-                4+ 件
-              </div>
-              {maxCount > 0 && (
-                <div className="text-gray-400 text-xs">
-                  最多: {maxCount} 件
+              {legendData.map((item, index) => (
+                <div key={index} className="flex items-center text-gray-300">
+                  <div className="w-3 h-3 rounded mr-2" style={{ backgroundColor: item.color }}></div>
+                  {item.label}
                 </div>
-              )}
+              ))}
             </div>
+            {maxCount > 0 && (
+              <div className="text-gray-400 text-xs mt-2 space-y-1">
+                <div>总计: {counts.length} 个国家/地区有艺术品</div>
+                <div>最大值: {maxCount} 件</div>
+              </div>
+            )}
           </div>
         )}
-        
+
         {clickedLocation && (
           <div className="mt-2 pt-2 border-t border-gray-600">
             <div className="text-xs text-gray-400 mb-1">点击的位置:</div>
