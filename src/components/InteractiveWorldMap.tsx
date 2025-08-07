@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { MapContainer, TileLayer, Marker, Popup, GeoJSON, useMapEvents } from 'react-leaflet';
 import L from 'leaflet';
+import * as turf from '@turf/turf';
 import { Artwork, TimeRange } from '../types';
 import { MapPin, Image as ImageIcon, Calendar, User, BarChart3 } from 'lucide-react';
 import { ArtworkService } from '../services/artworkService';
 import worldCountries from '../data/world-countries.json';
 import cities from '../data/cities.json';
 import 'leaflet/dist/leaflet.css';
-import { booleanPointInPolygon, point } from '@turf/boolean-point-in-polygon';
 
 // Fix for default markers in React Leaflet
 delete (L.Icon.Default.prototype as any)._getIconUrl;
@@ -132,27 +132,28 @@ const getCountryFromCoordinates = (lat: number, lng: number): string => {
 
 // Get city name from coordinates
 const getCityFromCoordinates = (lat: number, lng: number): string => {
-  // Simplified city detection based on coordinates
-  if (lat >= 43.7 && lat <= 43.8 && lng >= 11.2 && lng <= 11.3) return 'Florence';
-  if (lat >= 43.7 && lat <= 43.8 && lng >= 4.8 && lng <= 4.9) return 'Saint-Rémy-de-Provence';
-  if (lat >= 40.4 && lat <= 40.5 && lng >= -3.8 && lng <= -3.6) return 'Madrid';
-  if (lat >= 52.0 && lat <= 52.1 && lng >= 4.3 && lng <= 4.4) return 'Delft';
-  if (lat >= 35.6 && lat <= 35.7 && lng >= 139.6 && lng <= 139.8) return 'Tokyo';
-  if (lat >= 40.9 && lat <= 41.0 && lng >= -92.3 && lng <= -92.1) return 'Eldon';
-  if (lat >= 42.2 && lat <= 42.3 && lng >= 2.9 && lng <= 3.0) return 'Figueres';
+  try {
+    const clickPoint = turf.point([lng, lat]);
 
-  // Fallback to country-based city mapping
-  const country = getCountryFromCoordinates(lat, lng);
-  const cityMap: { [key: string]: string } = {
-    'Italy': 'Florence',
-    'France': 'Paris',
-    'Spain': 'Madrid',
-    'Netherlands': 'Amsterdam',
-    'Japan': 'Tokyo',
-    'United States': 'New York'
-  };
-  
-  return cityMap[country] || 'Unknown City';
+    // 在 worldCountries 数据中查找包含该点的国家
+    for (const feature of cities.features) {
+      const corrected = turf.rewind(feature, {reverse: true});
+      if (feature.properties.NAME === "NANJING"){
+        const corrected = turf.rewind(feature, {reverse: true});
+        // const testPoint = turf.point([118.81, 32.13]);
+        const testPoint = turf.point([118.82, 32.13])
+        console.log('After rewind:', turf.booleanPointInPolygon(testPoint, corrected));
+      }
+      if (turf.booleanPointInPolygon(clickPoint, corrected)) {
+        return feature.properties.NAME || feature.properties.name || 'Unknown';
+      }
+    }
+
+    return 'Unknown Location';
+  } catch (error) {
+    console.error('Error in coordinate detection:', error);
+    return 'Unknown Location';
+  }
 };
 
 const InteractiveWorldMap: React.FC<InteractiveWorldMapProps> = ({
@@ -186,8 +187,8 @@ const InteractiveWorldMap: React.FC<InteractiveWorldMapProps> = ({
        Object.entries(rawCounts).filter(([location]) => validCountries.has(location))
       );
 
-      console.log("原始记录", rawCounts);
-      console.log("显示记录", filteredCounts);
+      // console.log("原始记录", rawCounts);
+      // console.log("显示记录", filteredCounts);
 
       setCountryCounts(filteredCounts);
     };
@@ -349,7 +350,9 @@ const InteractiveWorldMap: React.FC<InteractiveWorldMapProps> = ({
   const handleMapClick = (lat: number, lng: number) => {
     const country = getCountryFromCoordinates(lat, lng);
     const city = getCityFromCoordinates(lat, lng);
-    console.log(country, city);
+    console.log(lng, lat);
+    console.log(country);
+    console.log(city);
 
     setClickedLocation({
       lat,
