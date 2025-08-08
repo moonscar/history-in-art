@@ -36,6 +36,29 @@ export class OpenAIService {
         message: '已从您的输入中提取时间和地点信息'
       };
 
+      // 构建动态消息
+      let messageParts = ['已从您的输入中提取'];
+      const extractedInfo = [];
+      
+      if (result.location) {
+        extractedInfo.push(`地点：${result.location}`);
+      }
+      
+      if (result.timeRange) {
+        const timeInfo = result.timeRange.start === result.timeRange.end 
+          ? `${result.timeRange.start}年` 
+          : `${result.timeRange.start}-${result.timeRange.end}年`;
+        extractedInfo.push(`时间：${timeInfo}`);
+      }
+
+      if (extractedInfo.length > 0) {
+        messageParts.push(extractedInfo.join('，'));
+        messageParts.push('即将为您跳转到指定的时间地点查找相关艺术品数据...');
+        result.message = messageParts.join(' ');
+      } else {
+        result.message = '未能从输入中提取到明确的时间和地点信息，请尝试更具体的描述。';
+      }
+
       // 处理地点信息
       if (apiResponse.country) {
         result.location = apiResponse.country;
