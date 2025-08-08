@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { MapContainer, TileLayer, Marker, Popup, GeoJSON, useMapEvents } from 'react-leaflet';
 import L from 'leaflet';
-import { point } from '@helpers';
-import booleanPointInPolygon from '@boolean-point-in-polygon';
-import rewind from '@rewind';
+import { point } from '@turf/helpers';
+import booleanPointInPolygon from '@turf/boolean-point-in-polygon';
+import rewind from '@turf/rewind';
 import { Artwork, TimeRange } from '../types';
 import { MapPin, Image as ImageIcon, Calendar, User, BarChart3 } from 'lucide-react';
 import { ArtworkService } from '../services/artworkService';
 import worldCountries from '../data/world-countries.json';
-import cities from '../data/cities.json';
+// import cities from '../data/cities.json';
 import 'leaflet/dist/leaflet.css';
 
 // Fix for default markers in React Leaflet
@@ -133,27 +133,15 @@ const getCountryFromCoordinates = (lat: number, lng: number): string => {
 };
 
 // Get city name from coordinates
-const getCityFromCoordinates = (lat: number, lng: number): string => {
+const getCityFromCoordinates = async (lat: number, lng: number): Promise<string> => {
   try {
-    const clickPoint = point([lng, lat]);
-
-    // 在 worldCountries 数据中查找包含该点的国家
-    for (const feature of cities.features) {
-      const corrected = rewind(feature, {reverse: true});
-      if (feature.properties.NAME === "NANJING"){
-        const corrected = rewind(feature, {reverse: true});
-        // const testPoint = point([118.81, 32.13]);
-        const testPoint = point([118.82, 32.13])
-        console.log('After rewind:', booleanPointInPolygon(testPoint, corrected));
-      }
-      if (booleanPointInPolygon(clickPoint, corrected)) {
-        return feature.properties.NAME || feature.properties.name || 'Unknown';
-      }
-    }
-
-    return 'Unknown Location';
+    const response = await fetch(
+      `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&addressdetails=1`
+    );
+    const data = await response.json();
+    return data.address?.city || data.address?.town || data.address?.village || 'Unknown Location';
   } catch (error) {
-    console.error('Error in coordinate detection:', error);
+    console.error('Geocoding error:', error);
     return 'Unknown Location';
   }
 };
@@ -188,9 +176,6 @@ const InteractiveWorldMap: React.FC<InteractiveWorldMapProps> = ({
       const filteredCounts = Object.fromEntries(
        Object.entries(rawCounts).filter(([location]) => validCountries.has(location))
       );
-
-      // console.log("原始记录", rawCounts);
-      // console.log("显示记录", filteredCounts);
 
       setCountryCounts(filteredCounts);
     };
