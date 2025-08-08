@@ -1,8 +1,9 @@
 interface ChatResponse {
-  start_time?: string;
-  end_time?: string;
-  country?: string;
-  city?: string;
+  location?: string;
+  timeRange?: {
+    start: number;
+    end: number;
+  };
   message: string;
 }
 
@@ -29,19 +30,53 @@ export class OpenAIService {
       }
 
       const apiResponse: APIResponse = await response.json();
-
-      return {
-        start_time: apiResponse.start_time || undefined,
-        end_time: apiResponse.end_time || undefined,
-        country: apiResponse.country || undefined,
-        city: apiResponse.city || undefined,
+      
+      // 转换为产品逻辑需要的格式
+      const result: ChatResponse = {
         message: '已从您的输入中提取时间和地点信息'
       };
+
+      // 处理地点信息
+      if (apiResponse.country) {
+        result.location = apiResponse.country;
+      }
+
+      // 处理时间信息
+      const startYear = this.parseTimeToYear(apiResponse.start_time);
+      const endYear = this.parseTimeToYear(apiResponse.end_time);
+      
+      if (startYear !== null || endYear !== null) {
+        result.timeRange = {
+          start: startYear || 0,
+          end: endYear || new Date().getFullYear()
+        };
+      }
+
+      return result;
 
     } catch (error) {
       console.error('Error calling API:', error);
       return this.fallbackProcessing(userMessage);
     }
+  }
+
+  private static parseTimeToYear(timeStr: string | null): number | null {
+    if (!timeStr) return null;
+    
+    const yearMatch = timeStr.match(/(\d{1,4})年?/);
+    if (yearMatch) {
+      const year = parseInt(yearMatch[1]);
+      if (year < 100 && year > 0) {
+        return year < 50 ? 2000 + year : 1900 + year;
+      }
+      return year;
+    }
+    
+    if (timeStr.includes('今天') || timeStr.includes('现在')) {
+      return new Date().getFullYear();
+    }
+    
+    return null;
   }
 
   private static fallbackProcessing(query: string): ChatResponse {
@@ -52,28 +87,25 @@ export class OpenAIService {
 
     // 时间范围处理
     if (queryLower.includes('文艺复兴') || queryLower.includes('renaissance')) {
-      response.start_time = '1400年';
-      response.end_time = '1600年';
+      response.timeRange = { start: 1400, end: 1600 };
       response.message += ' 已设置时间范围为文艺复兴时期。';
     } else if (queryLower.includes('巴洛克') || queryLower.includes('baroque')) {
-      response.start_time = '1600年';
-      response.end_time = '1750年';
+      response.timeRange = { start: 1600, end: 1750 };
       response.message += ' 已设置时间范围为巴洛克时期。';
     } else if (queryLower.includes('现代') || queryLower.includes('modern')) {
-      response.start_time = '1900年';
-      response.end_time = '1980年';
+      response.timeRange = { start: 1900, end: 1980 };
       response.message += ' 已设置时间范围为现代艺术时期。';
     }
 
     // 地点处理
     if (queryLower.includes('意大利') || queryLower.includes('italy')) {
-      response.country = 'Italy';
+      response.location = 'Italy';
       response.message += ' 已筛选意大利地区的艺术品。';
     } else if (queryLower.includes('法国') || queryLower.includes('france')) {
-      response.country = 'France';
+      response.location = 'France';
       response.message += ' 已筛选法国地区的艺术品。';
     } else if (queryLower.includes('日本') || queryLower.includes('japan')) {
-      response.country = 'Japan';
+      response.location = 'Japan';
       response.message += ' 已筛选日本地区的艺术品。';
     }
 

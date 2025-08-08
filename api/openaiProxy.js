@@ -25,7 +25,7 @@ export default async function handler(req, res) {
 规则：
 1. 提取并标准化时间和地点信息
 2. 将不确定的历史时间转换为具体日期范围
-3. 必须以JSON格式返回：{"start_time": "开始时间", "end_time": "结束时间", "country": "国家", "city": "城市"}
+3. 必须以JSON格式返回：{"start_time": "开始时间", "end_time": "结束时间", "country": "country name", "city": "city name"}
 4. 如果无法提取相应信息，对应字段返回null
 5. city字段可以为空，country尽量提取
 6. 不要回答其他问题或提供额外信息
