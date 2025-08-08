@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { MapContainer, TileLayer, Marker, Popup, GeoJSON, useMapEvents } from 'react-leaflet';
 import L from 'leaflet';
-import * as turf from '@turf/turf';
+import { point } from '@helpers';
+import booleanPointInPolygon from '@boolean-point-in-polygon';
+import rewind from '@rewind';
 import { Artwork, TimeRange } from '../types';
 import { MapPin, Image as ImageIcon, Calendar, User, BarChart3 } from 'lucide-react';
 import { ArtworkService } from '../services/artworkService';
@@ -114,11 +116,11 @@ const MapClickHandler: React.FC<{
 // Component to get country name from coordinates (simplified)
 const getCountryFromCoordinates = (lat: number, lng: number): string => {
   try {
-    const clickPoint = turf.point([lng, lat]);
+    const clickPoint = point([lng, lat]);
 
     // 在 worldCountries 数据中查找包含该点的国家
     for (const feature of worldCountries.features) {
-      if (turf.booleanPointInPolygon(clickPoint, feature)) {
+      if (booleanPointInPolygon(clickPoint, feature)) {
         return feature.properties.NAME || feature.properties.name || 'Unknown';
       }
     }
@@ -133,18 +135,18 @@ const getCountryFromCoordinates = (lat: number, lng: number): string => {
 // Get city name from coordinates
 const getCityFromCoordinates = (lat: number, lng: number): string => {
   try {
-    const clickPoint = turf.point([lng, lat]);
+    const clickPoint = point([lng, lat]);
 
     // 在 worldCountries 数据中查找包含该点的国家
     for (const feature of cities.features) {
-      const corrected = turf.rewind(feature, {reverse: true});
+      const corrected = rewind(feature, {reverse: true});
       if (feature.properties.NAME === "NANJING"){
-        const corrected = turf.rewind(feature, {reverse: true});
-        // const testPoint = turf.point([118.81, 32.13]);
-        const testPoint = turf.point([118.82, 32.13])
-        console.log('After rewind:', turf.booleanPointInPolygon(testPoint, corrected));
+        const corrected = rewind(feature, {reverse: true});
+        // const testPoint = point([118.81, 32.13]);
+        const testPoint = point([118.82, 32.13])
+        console.log('After rewind:', booleanPointInPolygon(testPoint, corrected));
       }
-      if (turf.booleanPointInPolygon(clickPoint, corrected)) {
+      if (booleanPointInPolygon(clickPoint, corrected)) {
         return feature.properties.NAME || feature.properties.name || 'Unknown';
       }
     }
