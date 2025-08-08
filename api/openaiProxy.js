@@ -1,12 +1,8 @@
-// api/openaiProxy.ts
-import OpenAI from 'openai';
-
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
-
+// api/openaiProxy.js
 export default async function handler(req, res) {
-  if (req.method !== 'POST') return res.status(405).end();
+  if (req.method !== 'POST') {
+    return res.status(405).json({ error: 'Method not allowed' });
+  }
   
   try {
     const { messages } = req.body;
@@ -15,7 +11,7 @@ export default async function handler(req, res) {
     if (!messages || !Array.isArray(messages) || messages.length === 0) {
       return res.status(400).json({ error: 'Invalid messages format' });
     }
-
+    
     const userInput = messages[messages.length - 1]?.content;
     if (!userInput || userInput.length > 2200) {
       return res.status(400).json({ error: 'Invalid input length' });
@@ -44,34 +40,44 @@ export default async function handler(req, res) {
 {"start_time": "1939年", "end_time": "1945年", "country": "德国", "city": "柏林"}
 {"start_time": "1840年", "end_time": "1912年", "country": "中国", "city": null}`
     };
-    };
     
     const userMessage = {
       role: "user", 
       content: userInput
     };
     
-    const completion = await openai.chat.completions.create({
-      model: 'gpt-4o-mini',
-      messages: [systemPrompt, userMessage],
-      max_tokens: 100, // 严格限制输出长度
-      temperature: 0.1, // 降低随机性
+    // 直接调用 OpenAI API
+    const response = await fetch('https://api.openai.com/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${process.env.OPENAI_API_KEY}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        model: 'gpt-4o-mini',
+        messages: [systemPrompt, userMessage],
+        max_tokens: 100,
+        temperature: 0.1,
+      })
     });
     
-    const response = completion.choices[0]?.message?.content;
+    if (!response.ok) {
+      throw new Error(`OpenAI API error: ${response.status}`);
+    }
+    
+    const completion = await response.json();
+    const aiResponse = completion.choices[0]?.message?.content;
     
     // 验证返回格式
     try {
-      const parsed = JSON.parse(response);
-      if (!parsed.hasOwnProperty('time') || !parsed.hasOwnProperty('location')) {
+      const parsed = JSON.parse(aiResponse);
+      if (!parsed.hasOwnProperty('start_time') || !parsed.hasOwnProperty('country')) {
         throw new Error('Invalid format');
       }
-      res.status(200).json({ 
-        time: parsed.time, 
-        location: parsed.location 
-      });
+      
+      res.status(200).json(parsed);
     } catch (parseError) {
-      console.error('Response format error:', response);
+      console.error('Response format error:', aiResponse);
       res.status(500).json({ error: 'Invalid response format' });
     }
     
