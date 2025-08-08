@@ -286,26 +286,44 @@ const InteractiveWorldMap: React.FC<InteractiveWorldMapProps> = ({
     };
   };
 
-  // Handle country click
-  const onCountryClick = (feature: any, layer: any) => {
-    const countryName = feature.properties.NAME;
-    const count = countryCounts[countryName] || 0;
+  // 3. 修改 onCountryClick 函数，使用 Nominatim API
+  const onCountryClick = async (feature: any, layer: any) => {
+    // 获取国家的中心点坐标
+    const bounds = layer.getBounds();
+    const center = bounds.getCenter();
+    
+    try {
+      const { country } = await getLocationFromCoordinates(center.lat, center.lng);
+      const count = countryCounts[country] || countryCounts[feature.properties.NAME] || 0;
 
-    if (count > 0) {
-      onLocationTimeSelect(countryName, timeRange);
+      if (count > 0) {
+        onLocationTimeSelect(country, timeRange);
+      }
+
+      // Show popup with country info
+      const popup = L.popup()
+        .setContent(`
+          <div class="bg-gray-800 text-white p-3 rounded-lg">
+            <h3 class="font-bold text-blue-400 mb-2">${country}</h3>
+            <p class="text-gray-300 text-sm mb-2">${count} artwork${count !== 1 ? 's' : ''}</p>
+            ${count > 0 ? 
+              `<button onclick="window.queryCountry('${country}')" class="w-full bg-blue-600 hover:bg-blue-700 text-white py-1 px-2 rounded text-sm">查看艺术品</button>` : 
+              '<p class="text-gray-500 text-xs">该时期无艺术品</p>'
+            }
+          </div>
+        `);
+
+      layer.bindPopup(popup);
+    } catch (error) {
+      console.error('Error getting country info:', error);
+      // 回退到原来的逻辑
+      const countryName = feature.properties.NAME;
+      const count = countryCounts[countryName] || 0;
+      
+      if (count > 0) {
+        onLocationTimeSelect(countryName, timeRange);
+      }
     }
-
-    // Show popup with country info
-    const popup = L.popup()
-      .setContent(`
-        <div class="bg-gray-800 text-white p-3 rounded-lg">
-          <h3 class="font-bold text-blue-400 mb-2">${countryName}</h3>
-          <p class="text-gray-300 text-sm mb-2">${count} artwork${count !== 1 ? 's' : ''}</p>
-          ${count > 0 ? '<button onclick="window.queryCountry(\'' + countryName + '\')" class="w-full bg-blue-600 hover:bg-blue-700 text-white py-1 px-2 rounded text-sm">查看艺术品</button>' : '<p class="text-gray-500 text-xs">该时期无艺术品</p>'}
-        </div>
-      `);
-
-    layer.bindPopup(popup);
   };
 
   // Add global function for popup button
@@ -334,19 +352,47 @@ const InteractiveWorldMap: React.FC<InteractiveWorldMapProps> = ({
     onLocationTimeSelect(location, timeRange);
   };
 
-  const handleMapClick = (lat: number, lng: number) => {
-    const country = getCountryFromCoordinates(lat, lng);
-    const city = getCityFromCoordinates(lat, lng);
-    console.log(lng, lat);
-    console.log(country);
-    console.log(city);
+  // 1. 修改 getCityFromCoordinates 函数，同时获取城市和国家信息
+  const getLocationFromCoordinates = async (lat: number, lng: number): Promise<{
+    city: string;
+    country: string;
+  }> => {
+    try {
+      const response = await fetch(
+        `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&addressdetails=1&accept-language=en`
+      );
+      const data = await response.json();
+      
+      const city = data.address?.city || 
+                   data.address?.town || 
+                   data.address?.village || 
+                   data.display_name?.split(',')[0] || 
+                   'Unknown Location';
+      
+      const country = data.address?.country || 'Unknown Country';
+      
+      return { city, country };
+    } catch (error) {
+      console.error('Geocoding error:', error);
+      return { city: 'Unknown Location', country: 'Unknown Country' };
+    }
+  };
 
-    setClickedLocation({
-      lat,
-      lng,
-      city,
-      country
-    });
+  // 2. 修改 handleMapClick 函数
+  const handleMapClick = async (lat: number, lng: number) => {
+    try {
+      const { city, country } = await getLocationFromCoordinates(lat, lng);
+      console.log('Clicked location:', { lat, lng, city, country });
+
+      setClickedLocation({
+        lat,
+        lng,
+        city,
+        country
+      });
+    } catch (error) {
+      console.error('Error getting location info:', error);
+    }
   };
 
   const handleCityClick = () => {
