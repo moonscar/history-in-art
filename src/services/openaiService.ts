@@ -30,20 +30,32 @@ export class OpenAIService {
       }
 
       const apiResponse: APIResponse = await response.json();
-      
-      // 转换为产品逻辑需要的格式
-      const result: ChatResponse = {
-        message: '已从您的输入中提取时间和地点信息'
-      };
 
-      // 构建动态消息
-      let messageParts = ['已从您的输入中提取'];
+      // 先创建基本的 result 对象
+      const result: ChatResponse = {};
+
+      // 先处理数据赋值
+      if (apiResponse.country) {
+        result.location = apiResponse.country;
+      }
+
+      const startYear = this.parseTimeToYear(apiResponse.start_time);
+      const endYear = this.parseTimeToYear(apiResponse.end_time);
+
+      if (startYear !== null || endYear !== null) {
+        result.timeRange = {
+          start: startYear || 0,
+          end: endYear || new Date().getFullYear()
+        };
+      }
+
+      // 然后根据已赋值的数据构建消息
       const extractedInfo = [];
-      
+
       if (result.location) {
         extractedInfo.push(`地点：${result.location}`);
       }
-      
+
       if (result.timeRange) {
         const timeInfo = result.timeRange.start === result.timeRange.end 
           ? `${result.timeRange.start}年` 
@@ -52,40 +64,20 @@ export class OpenAIService {
       }
 
       if (extractedInfo.length > 0) {
-        messageParts.push(extractedInfo.join('，'));
-        messageParts.push('即将为您跳转到指定的时间地点查找相关艺术品数据...');
-        result.message = messageParts.join(' ');
+        result.message = `已从您的输入中提取 ${extractedInfo.join('，')} 即将为您跳转到指定的时间地点查找相关艺术品数据...`;
       } else {
         result.message = '未能从输入中提取到明确的时间和地点信息，请尝试更具体的描述。';
       }
 
-      // 处理地点信息
-      if (apiResponse.country) {
-        result.location = apiResponse.country;
-      }
-
-      // 处理时间信息
-      const startYear = this.parseTimeToYear(apiResponse.start_time);
-      const endYear = this.parseTimeToYear(apiResponse.end_time);
-      
-      if (startYear !== null || endYear !== null) {
-        result.timeRange = {
-          start: startYear || 0,
-          end: endYear || new Date().getFullYear()
-        };
-      }
-
       return result;
-
     } catch (error) {
       console.error('Error calling API:', error);
       return this.fallbackProcessing(userMessage);
     }
   }
-
   private static parseTimeToYear(timeStr: string | null): number | null {
     if (!timeStr) return null;
-    
+
     const yearMatch = timeStr.match(/(\d{1,4})年?/);
     if (yearMatch) {
       const year = parseInt(yearMatch[1]);
@@ -94,11 +86,11 @@ export class OpenAIService {
       }
       return year;
     }
-    
+
     if (timeStr.includes('今天') || timeStr.includes('现在')) {
       return new Date().getFullYear();
     }
-    
+
     return null;
   }
 
