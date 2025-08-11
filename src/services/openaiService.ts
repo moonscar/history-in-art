@@ -63,6 +63,9 @@ export class OpenAIService {
         extractedInfo.push(`时间：${timeInfo}`);
       }
 
+      console.log(apiResponse);
+      console.log(extractedInfo.length, extractedInfo);
+
       if (extractedInfo.length > 0) {
         result.message = `已从您的输入中提取 ${extractedInfo.join('，')} 即将为您跳转到指定的时间地点查找相关艺术品数据...`;
       } else {
