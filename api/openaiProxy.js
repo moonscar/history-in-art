@@ -27,7 +27,7 @@ export default async function handler(req, res) {
 2. 将不确定的历史时间转换为具体日期范围
 3. 必须以JSON格式返回：{"start_time": "开始时间", "end_time": "结束时间", "country": "country name", "city": "city name"}
 4. 如果无法提取相应信息，对应字段返回null
-5. city字段可以为空，country尽量提取
+5. city字段可以为空，country尽量提取，使用标准的
 6. 不要回答其他问题或提供额外信息
 
 时间标准化示例：
@@ -37,8 +37,8 @@ export default async function handler(req, res) {
 - "明天" → start_time: "明天", end_time: null
 
 示例输出：
-{"start_time": "1939年", "end_time": "1945年", "country": "德国", "city": "柏林"}
-{"start_time": "1840年", "end_time": "1912年", "country": "中国", "city": null}`
+{"start_time": "1939", "end_time": "1945", "country": "Germany", "city": "Berlin"}
+{"start_time": "1840", "end_time": "1912", "country": "China", "city": null}`
     };
     
     const userMessage = {
