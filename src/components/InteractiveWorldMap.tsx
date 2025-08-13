@@ -613,9 +613,9 @@ const InteractiveWorldMap: React.FC<InteractiveWorldMapProps> = ({
 
       {/* Updated Map Legend */}
       <div className="absolute bottom-6 left-6 z-20 bg-black/80 backdrop-blur-sm rounded-xl p-4 shadow-2xl">
-        <h3 className="text-white font-medium mb-3 text-sm">
+{/*        <h3 className="text-white font-medium mb-3 text-sm">
           {showHeatmap ? '国家热力图' : '艺术时期'}
-        </h3>
+        </h3>*/}
         
         {showHeatmap ? (
           <div className="space-y-2 text-xs">
