@@ -132,8 +132,8 @@ function App() {
                 <Palette size={24} className="text-white" />
               </div>
               <div>
-                <h1 className="text-2xl font-bold text-white">ArtSpace Navigator</h1>
-                <p className="text-gray-300 text-sm">Explore Art Through Time and Space</p>
+                <h1 className="text-2xl font-bold text-white">History in Art</h1>
+                <p className="text-gray-300 text-sm">Art as eyes, witness history</p>
               </div>
             </div>
             
@@ -212,7 +212,7 @@ function App() {
       <footer className="mt-12 bg-black/20 backdrop-blur-sm border-t border-gray-700">
         <div className="max-w-7xl mx-auto px-4 py-6">
           <div className="text-center text-gray-400 text-sm">
-            <p>© 2024 ArtSpace Navigator. Discover the world's greatest artworks through time and geography.</p>
+            <p>© 2025 History in Art. Rediscovering history through works of art by time and geography.</p>
           </div>
         </div>
       </footer>
