@@ -25,9 +25,9 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ onQueryUpdate, onLocation
     {
       id: '1',
       text: "我是你的艺术时光机，只能带你去特定的年代与地方。\
-例如：\
-“法国大革命时期的俄罗斯” \
-“牛顿时代的中国” \
+例如：\n\
+“法国大革命时期的俄罗斯” \n\
+“牛顿时代的中国” \n\
 输入时间与地点，我们立刻出发。",
       sender: 'bot',
       timestamp: new Date()
