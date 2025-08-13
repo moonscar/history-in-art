@@ -162,6 +162,9 @@ function App() {
         </div>
       </header>
 
+      <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6333474665018049"
+           crossorigin="anonymous"></script>
+
       {/* Main Content */}
       <main className="relative">
         {/* Full-screen Map */}
