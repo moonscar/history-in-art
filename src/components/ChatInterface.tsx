@@ -20,11 +20,15 @@ interface ChatInterfaceProps {
 }
 
 const ChatInterface: React.FC<ChatInterfaceProps> = ({ onQueryUpdate, onLocationTimeUpdate }) => {
-  const [isExpanded, setIsExpanded] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(true);
   const [messages, setMessages] = useState<Message[]>([
     {
       id: '1',
-      text: '您好！我是您的AI艺术品导航助手。您可以通过自然语言告诉我您想要查找的艺术品，比如："显示文艺复兴时期意大利的画作"或"查找19世纪法国的印象派作品"。我会智能解析您的需求并自动定位到相应的地点和时间。',
+      text: "我是你的艺术时光机，只能带你去特定的年代与地方。\
+例如：\
+“法国大革命时期的俄罗斯” \
+“牛顿时代的中国” \
+输入时间与地点，我们立刻出发。",
       sender: 'bot',
       timestamp: new Date()
     }
@@ -155,7 +159,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ onQueryUpdate, onLocation
                       <Bot size={16} className="text-blue-400 mt-0.5 flex-shrink-0" />
                     )}
                     <div className="flex-1">
-                      <p className="text-sm">{message.text}</p>
+                      <p className="text-sm whitespace-pre-line">{message.text}</p>
                       <p className="text-xs opacity-70 mt-1">
                         {message.timestamp.toLocaleTimeString()}
                       </p>
