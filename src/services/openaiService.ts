@@ -53,14 +53,14 @@ export class OpenAIService {
       const extractedInfo = [];
 
       if (result.location) {
-        extractedInfo.push(`地点：${result.location}`);
+        extractedInfo.push(`\n地点：${result.location}`);
       }
 
       if (result.timeRange) {
         const timeInfo = result.timeRange.start === result.timeRange.end 
           ? `${result.timeRange.start}年` 
           : `${result.timeRange.start}-${result.timeRange.end}年`;
-        extractedInfo.push(`时间：${timeInfo}`);
+        extractedInfo.push(`\n时间：${timeInfo}\n`);
       }
 
       console.log(apiResponse);
