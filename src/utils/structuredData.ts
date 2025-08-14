@@ -2,34 +2,34 @@ import { Artwork } from '../types';
 
 // Generate structured data for the website
 export const generateWebsiteStructuredData = () => ({
-  "@context": "https://schema.org",
+  "@context": "https://history-in-art.org",
   "@type": "WebSite",
-  "name": "ArtSpace Navigator",
-  "description": "探索世界各地的艺术珍品，通过时空维度智能导航系统，结合AI助手、交互式地图和时间轴，发现不同历史时期的艺术作品。",
-  "url": "https://artspace-navigator.vercel.app",
+  "name": "History-in-Art",
+  "description": "History-in-Art 是一款将 全球艺术作品 与 历史时空探索 融合的智能交互平台，旨在帮助用户在地理与时间的双重维度中发现、研究与欣赏艺术。通过 交互式世界地图 和 时间轴浏览，用户可以从古代文明到现代艺术，跨越数千年历史，探索各大洲、各国、各城市的绘画、雕塑与其他艺术形式。内置的 AI 艺术助手。内置的 AI 时空信息助手 精准聚焦于作品的年代背景与地域分布，让用户在地图与时间轴上高效开展时空艺术探索。History-in-Art 都能让您在沉浸式的可视化体验中了解作品的历史背景、创作故事与文化价值。适合艺术爱好者、历史学者、教育工作者以及希望通过艺术了解世界的人士，是一个兼具学习、研究与灵感发现的艺术导航平台。",
+  "url": "https://history-in-art.org",
   "inLanguage": "zh-CN",
   "copyrightYear": "2025",
   "copyrightHolder": {
     "@type": "Organization",
-    "name": "ArtSpace Navigator"
+    "name": "History in Art"
   },
   "potentialAction": {
     "@type": "SearchAction",
     "target": {
       "@type": "EntryPoint",
-      "urlTemplate": "https://artspace-navigator.vercel.app?q={search_term_string}"
+      "urlTemplate": "https://history-in-art.org?q={search_term_string}"
     },
     "query-input": "required name=search_term_string"
   },
   "author": {
     "@type": "Organization",
-    "name": "ArtSpace Navigator",
-    "url": "https://artspace-navigator.vercel.app"
+    "name": "History in Art",
+    "url": "https://history-in-art.org"
   },
   "publisher": {
     "@type": "Organization",
-    "name": "ArtSpace Navigator",
-    "url": "https://artspace-navigator.vercel.app"
+    "name": "History in Art",
+    "url": "https://history-in-art.org"
   }
 });
 
@@ -37,8 +37,8 @@ export const generateWebsiteStructuredData = () => ({
 export const generateOrganizationStructuredData = () => ({
   "@context": "https://schema.org",
   "@type": "Organization",
-  "name": "ArtSpace Navigator",
-  "url": "https://artspace-navigator.vercel.app",
+  "name": "History in Art",
+  "url": "https://history-in-art.org",
   "description": "艺术品时空导航系统，通过AI助手、交互式地图和时间轴探索世界艺术珍品",
   "foundingDate": "2025",
   "sameAs": [
@@ -78,11 +78,11 @@ export const generateArtworkStructuredData = (artwork: Artwork) => ({
   },
   "image": artwork.imageUrl,
   "thumbnailUrl": artwork.imageUrl,
-  "url": `https://artspace-navigator.vercel.app/artwork/${artwork.id}`,
+  "url": `https://history-in-art.org/artwork/${artwork.id}`,
   "keywords": [artwork.movement, artwork.period, artwork.artist, artwork.location.country].join(', '),
   "mainEntityOfPage": {
     "@type": "WebPage",
-    "@id": `https://artspace-navigator.vercel.app/artwork/${artwork.id}`
+    "@id": `https://history-in-art.org/artwork/${artwork.id}`
   }
 });
 
@@ -109,7 +109,7 @@ export const generateCollectionStructuredData = (artworks: Artwork[], location?:
           "name": artwork.title,
           "creator": artwork.artist,
           "dateCreated": artwork.year.toString(),
-          "url": `https://artspace-navigator.vercel.app/artwork/${artwork.id}`
+          "url": `https://history-in-art.org/artwork/${artwork.id}`
         }
       }))
     }

@@ -2,7 +2,7 @@ User-agent: *
 Allow: /
 
 # Sitemap
-Sitemap: https://artspace-navigator.vercel.app/sitemap.xml
+Sitemap: https://history-in-art.org/sitemap.xml
 
 # Crawl-delay for polite crawling
 Crawl-delay: 1

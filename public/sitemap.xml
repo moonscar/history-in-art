@@ -4,53 +4,53 @@
   
   <!-- Main pages -->
   <url>
-    <loc>https://artspace-navigator.vercel.app/</loc>
+    <loc>https://history-in-art.org/</loc>
     <lastmod>2025-01-27</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
-    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://artspace-navigator.vercel.app/" />
-    <xhtml:link rel="alternate" hreflang="en" href="https://artspace-navigator.vercel.app/en" />
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://artspace-navigator.vercel.app/" />
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://history-in-art.org/" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://history-in-art.org/en" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://history-in-art.org/" />
   </url>
   
   <!-- Location-based pages -->
   <url>
-    <loc>https://artspace-navigator.vercel.app?location=Italy</loc>
+    <loc>https://history-in-art.org?location=Italy</loc>
     <lastmod>2025-01-27</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   
   <url>
-    <loc>https://artspace-navigator.vercel.app?location=France</loc>
+    <loc>https://history-in-art.org?location=France</loc>
     <lastmod>2025-01-27</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   
   <url>
-    <loc>https://artspace-navigator.vercel.app?location=Netherlands</loc>
+    <loc>https://history-in-art.org?location=Netherlands</loc>
     <lastmod>2025-01-27</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   
   <url>
-    <loc>https://artspace-navigator.vercel.app?location=Spain</loc>
+    <loc>https://history-in-art.org?location=Spain</loc>
     <lastmod>2025-01-27</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   
   <url>
-    <loc>https://artspace-navigator.vercel.app?location=Japan</loc>
+    <loc>https://history-in-art.org?location=Japan</loc>
     <lastmod>2025-01-27</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   
   <url>
-    <loc>https://artspace-navigator.vercel.app?location=United%20States</loc>
+    <loc>https://history-in-art.org?location=United%20States</loc>
     <lastmod>2025-01-27</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
@@ -58,28 +58,28 @@
   
   <!-- Time period pages -->
   <url>
-    <loc>https://artspace-navigator.vercel.app?start=1400&amp;end=1600</loc>
+    <loc>https://history-in-art.org?start=1400&amp;end=1600</loc>
     <lastmod>2025-01-27</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   
   <url>
-    <loc>https://artspace-navigator.vercel.app?start=1600&amp;end=1750</loc>
+    <loc>https://history-in-art.org?start=1600&amp;end=1750</loc>
     <lastmod>2025-01-27</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   
   <url>
-    <loc>https://artspace-navigator.vercel.app?start=1850&amp;end=1900</loc>
+    <loc>https://history-in-art.org?start=1850&amp;end=1900</loc>
     <lastmod>2025-01-27</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   
   <url>
-    <loc>https://artspace-navigator.vercel.app?start=1900&amp;end=1980</loc>
+    <loc>https://history-in-art.org?start=1900&amp;end=1980</loc>
     <lastmod>2025-01-27</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
@@ -87,21 +87,21 @@
   
   <!-- Combined location and time period pages -->
   <url>
-    <loc>https://artspace-navigator.vercel.app?location=Italy&amp;start=1400&amp;end=1600</loc>
+    <loc>https://history-in-art.org?location=Italy&amp;start=1400&amp;end=1600</loc>
     <lastmod>2025-01-27</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
-    <loc>https://artspace-navigator.vercel.app?location=France&amp;start=1850&amp;end=1900</loc>
+    <loc>https://history-in-art.org?location=France&amp;start=1850&amp;end=1900</loc>
     <lastmod>2025-01-27</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
-    <loc>https://artspace-navigator.vercel.app?location=Netherlands&amp;start=1600&amp;end=1750</loc>
+    <loc>https://history-in-art.org?location=Netherlands&amp;start=1600&amp;end=1750</loc>
     <lastmod>2025-01-27</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>

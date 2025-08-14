@@ -13,12 +13,12 @@ const ArtworkModal: React.FC<ArtworkModalProps> = ({ artwork, onClose }) => {
   if (!artwork) return null;
 
   const artworkSEO = {
-    title: `${artwork.title} - ${artwork.artist} | ArtSpace Navigator`,
+    title: `${artwork.title} - ${artwork.artist} | History in Art`,
     description: `${artwork.description.substring(0, 160)}... 创作于${artwork.year}年，${artwork.location.city}, ${artwork.location.country}。`,
     keywords: `${artwork.title},${artwork.artist},${artwork.movement},${artwork.period},${artwork.location.country},艺术品`,
     image: artwork.imageUrl,
     type: 'article',
-    canonical: `https://artspace-navigator.vercel.app/artwork/${artwork.id}`
+    canonical: `https://history-in-art.org/artwork/${artwork.id}`
   };
 
   const structuredData = generateArtworkStructuredData(artwork);

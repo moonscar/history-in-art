@@ -1,6 +1,6 @@
 {
-  "name": "ArtSpace Navigator - 艺术品时空导航",
-  "short_name": "ArtSpace",
+  "name": "History-in-Art ArtSpace Navigator - 艺术品时空导航",
+  "short_name": "History-in-Art",
   "description": "探索世界各地的艺术珍品，通过时空维度智能导航系统发现艺术历史",
   "start_url": "/",
   "display": "standalone",

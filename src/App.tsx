@@ -102,8 +102,8 @@ function App() {
 
   // Generate dynamic SEO data based on current state
   const generateDynamicSEO = () => {
-    let title = "ArtSpace Navigator - 艺术品时空导航网站 | 探索世界艺术珍品";
-    let description = "探索世界各地的艺术珍品，通过时空维度智能导航系统，结合AI助手、交互式地图和时间轴，发现不同历史时期的艺术作品。";
+    let title = "History-in-Art - 地理与历史交织的艺术旅程 | 在线探索艺术世界";
+    let description = "History-in-Art 是一款将 全球艺术作品 与 历史时空探索 融合的智能交互平台，旨在帮助用户在地理与时间的双重维度中发现、研究与欣赏艺术。通过 交互式世界地图 和 时间轴浏览，用户可以从古代文明到现代艺术，跨越数千年历史，探索各大洲、各国、各城市的绘画、雕塑与其他艺术形式。内置的 AI 艺术助手。内置的 AI 时空信息助手 精准聚焦于作品的年代背景与地域分布，让用户在地图与时间轴上高效开展时空艺术探索。History-in-Art 都能让您在沉浸式的可视化体验中了解作品的历史背景、创作故事与文化价值。适合艺术爱好者、历史学者、教育工作者以及希望通过艺术了解世界的人士，是一个兼具学习、研究与灵感发现的艺术导航平台。";
     let keywords = "艺术品,艺术导航,世界艺术,历史艺术,艺术地图,艺术时间轴,文艺复兴,巴洛克,印象派,现代艺术";
     let robots = "index, follow";
     
@@ -113,11 +113,11 @@ function App() {
       if (chatQuery.movement) filters.push(chatQuery.movement);
       if (chatQuery.artist) filters.push(chatQuery.artist);
       
-      title = `${filters.join(' ')} 艺术作品 | ArtSpace Navigator`;
+      title = `${filters.join(' ')} 艺术作品 | History in Art`;
       description = `探索${filters.join('、')}相关的艺术作品，发现${timeRange.start}-${timeRange.end}年间的艺术珍品。`;
       keywords = `${filters.join(',')},${keywords}`;
     } else if (timeRange.start !== 1400 || timeRange.end !== 2024) {
-      title = `${timeRange.start}-${timeRange.end}年艺术作品 | ArtSpace Navigator`;
+      title = `${timeRange.start}-${timeRange.end}年艺术作品 | History in Art`;
       description = `探索${timeRange.start}-${timeRange.end}年间的世界艺术作品，通过交互式地图和时间轴发现历史艺术珍品。`;
     }
     
@@ -133,20 +133,20 @@ function App() {
   
   // Generate breadcrumb data
   const breadcrumbItems = [
-    { name: "首页", url: "https://artspace-navigator.vercel.app" }
+    { name: "首页", url: "https://history-in-art.org" }
   ];
   
   if (chatQuery.location) {
     breadcrumbItems.push({ 
       name: `${chatQuery.location}艺术品`, 
-      url: `https://artspace-navigator.vercel.app?location=${encodeURIComponent(chatQuery.location)}` 
+      url: `https://history-in-art.org?location=${encodeURIComponent(chatQuery.location)}` 
     });
   }
   
   if (timeRange.start !== 1400 || timeRange.end !== 2024) {
     breadcrumbItems.push({ 
       name: `${timeRange.start}-${timeRange.end}年`, 
-      url: `https://artspace-navigator.vercel.app?start=${timeRange.start}&end=${timeRange.end}` 
+      url: `https://history-in-art.org?start=${timeRange.start}&end=${timeRange.end}` 
     });
   }
   
@@ -156,9 +156,9 @@ function App() {
   
   // Generate hreflang for international SEO (future preparation)
   const hreflangLinks = [
-    { lang: "zh-CN", url: "https://artspace-navigator.vercel.app" },
-    { lang: "en", url: "https://artspace-navigator.vercel.app/en" },
-    { lang: "x-default", url: "https://artspace-navigator.vercel.app" }
+    { lang: "zh-CN", url: "https://history-in-art.org" },
+    { lang: "en", url: "https://history-in-art.org/en" },
+    { lang: "x-default", url: "https://history-in-art.org" }
   ];
 
   // Show loading state
@@ -166,7 +166,7 @@ function App() {
     return (
       <>
         <SEOHead 
-          title="加载中... | ArtSpace Navigator" 
+          title="加载中... | History in Art" 
           description="艺术品数据正在加载中，请稍候..." 
           keywords={keywords} 
           structuredData={websiteData}
@@ -188,7 +188,7 @@ function App() {
     return (
       <>
         <SEOHead 
-          title="数据库连接错误 | ArtSpace Navigator" 
+          title="数据库连接错误 | History in Art" 
           description="网站正在加载中，请稍后再试。" 
           keywords={keywords} 
           structuredData={websiteData}
@@ -228,7 +228,7 @@ function App() {
                   <Palette size={24} className="text-white" />
                 </div>
                 <div>
-                  <h1 className="text-2xl font-bold text-white">ArtSpace Navigator</h1>
+                  <h1 className="text-2xl font-bold text-white">History in Art</h1>
                   <p className="text-gray-300 text-sm">Art as eyes, witness history</p>
                 </div>
               </div>
@@ -318,7 +318,7 @@ function App() {
               </ul>
             </nav>
             <div className="text-center text-gray-400 text-sm">
-              <p>© 2025 ArtSpace Navigator. Rediscovering history through works of art by time and geography.</p>
+              <p>© 2025 History in Art. Rediscovering history through works of art by time and geography.</p>
               <p className="mt-2">通过艺术品重新发现历史，探索时间与地理的交汇点</p>
             </div>
           </div>
