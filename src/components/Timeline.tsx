@@ -68,12 +68,20 @@ const Timeline: React.FC<TimelineProps> = ({ timeRange, onTimeRangeChange }) => 
       </div>
       
       <div className="space-y-4">
-        {/* Period bands */}
-        <div className="relative h-6">
+        {/* Main timeline with overlaid period bands */}
+        <div
+          ref={timelineRef}
+          className="relative h-10 bg-gray-700 rounded-lg cursor-pointer"
+          onMouseMove={handleMouseMove}
+        >
+          {/* Timeline track */}
+          <div className="absolute inset-0 bg-gradient-to-r from-gray-600 to-gray-500 rounded-lg"></div>
+          
+          {/* Historical period bands overlaid on timeline */}
           {historicalPeriods.map((period) => (
             <div
               key={period.name}
-              className="absolute h-4 rounded text-xs text-white flex items-center justify-center font-medium shadow-lg"
+              className="absolute h-full rounded text-xs text-white flex items-center justify-center font-medium opacity-60"
               style={{
                 left: `${yearToPosition(period.start)}%`,
                 width: `${yearToPosition(period.end) - yearToPosition(period.start)}%`,
@@ -84,16 +92,6 @@ const Timeline: React.FC<TimelineProps> = ({ timeRange, onTimeRangeChange }) => 
               {period.name}
             </div>
           ))}
-        </div>
-        
-        {/* Main timeline */}
-        <div
-          ref={timelineRef}
-          className="relative h-10 bg-gray-700 rounded-lg cursor-pointer"
-          onMouseMove={handleMouseMove}
-        >
-          {/* Timeline track */}
-          <div className="absolute inset-0 bg-gradient-to-r from-gray-600 to-gray-500 rounded-lg"></div>
           
           {/* Selected range */}
           <div
@@ -106,7 +104,7 @@ const Timeline: React.FC<TimelineProps> = ({ timeRange, onTimeRangeChange }) => 
           
           {/* Start handle */}
           <div
-            className="absolute top-1/2 transform -translate-y-1/2 w-5 h-5 bg-blue-400 rounded-full cursor-grab active:cursor-grabbing shadow-lg border-2 border-white hover:scale-110 transition-transform"
+            className="absolute top-1/2 transform -translate-y-1/2 w-5 h-5 bg-blue-400 rounded-full cursor-grab active:cursor-grabbing shadow-lg border-2 border-white hover:scale-110 transition-transform z-10"
             style={{ left: `${yearToPosition(timeRange.start)}%`, marginLeft: '-10px' }}
             onMouseDown={() => handleMouseDown('start')}
           >
@@ -115,7 +113,7 @@ const Timeline: React.FC<TimelineProps> = ({ timeRange, onTimeRangeChange }) => 
           
           {/* End handle */}
           <div
-            className="absolute top-1/2 transform -translate-y-1/2 w-5 h-5 bg-purple-400 rounded-full cursor-grab active:cursor-grabbing shadow-lg border-2 border-white hover:scale-110 transition-transform"
+            className="absolute top-1/2 transform -translate-y-1/2 w-5 h-5 bg-purple-400 rounded-full cursor-grab active:cursor-grabbing shadow-lg border-2 border-white hover:scale-110 transition-transform z-10"
             style={{ left: `${yearToPosition(timeRange.end)}%`, marginLeft: '-10px' }}
             onMouseDown={() => handleMouseDown('end')}
           >
