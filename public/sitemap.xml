@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  
+  <!-- Main pages -->
+  <url>
+    <loc>https://artspace-navigator.vercel.app/</loc>
+    <lastmod>2025-01-27</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://artspace-navigator.vercel.app/" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://artspace-navigator.vercel.app/en" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://artspace-navigator.vercel.app/" />
+  </url>
+  
+  <!-- Location-based pages -->
+  <url>
+    <loc>https://artspace-navigator.vercel.app?location=Italy</loc>
+    <lastmod>2025-01-27</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  
+  <url>
+    <loc>https://artspace-navigator.vercel.app?location=France</loc>
+    <lastmod>2025-01-27</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  
+  <url>
+    <loc>https://artspace-navigator.vercel.app?location=Netherlands</loc>
+    <lastmod>2025-01-27</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  
+  <url>
+    <loc>https://artspace-navigator.vercel.app?location=Spain</loc>
+    <lastmod>2025-01-27</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  
+  <url>
+    <loc>https://artspace-navigator.vercel.app?location=Japan</loc>
+    <lastmod>2025-01-27</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  
+  <url>
+    <loc>https://artspace-navigator.vercel.app?location=United%20States</loc>
+    <lastmod>2025-01-27</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  
+  <!-- Time period pages -->
+  <url>
+    <loc>https://artspace-navigator.vercel.app?start=1400&amp;end=1600</loc>
+    <lastmod>2025-01-27</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  
+  <url>
+    <loc>https://artspace-navigator.vercel.app?start=1600&amp;end=1750</loc>
+    <lastmod>2025-01-27</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  
+  <url>
+    <loc>https://artspace-navigator.vercel.app?start=1850&amp;end=1900</loc>
+    <lastmod>2025-01-27</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  
+  <url>
+    <loc>https://artspace-navigator.vercel.app?start=1900&amp;end=1980</loc>
+    <lastmod>2025-01-27</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  
+  <!-- Combined location and time period pages -->
+  <url>
+    <loc>https://artspace-navigator.vercel.app?location=Italy&amp;start=1400&amp;end=1600</loc>
+    <lastmod>2025-01-27</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://artspace-navigator.vercel.app?location=France&amp;start=1850&amp;end=1900</loc>
+    <lastmod>2025-01-27</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://artspace-navigator.vercel.app?location=Netherlands&amp;start=1600&amp;end=1750</loc>
+    <lastmod>2025-01-27</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+</urlset>
