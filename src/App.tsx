@@ -1,6 +1,7 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { Artwork, TimeRange } from './types';
 import { useArtworks } from './hooks/useArtworks';
+import { parseURLParams, updateURL, getInitialStateFromURL } from './utils/urlParams';
 import SEOHead from './components/SEOHead';
 import { 
   generateWebsiteStructuredData, 
@@ -16,7 +17,8 @@ import ResultsModal from './components/ResultsModal';
 import { Globe, Clock, Palette, AlertCircle } from 'lucide-react';
 
 function App() {
-  const [timeRange, setTimeRange] = useState<TimeRange>({ start: 1400, end: 2024 });
+  const initialState = getInitialStateFromURL();
+  const [timeRange, setTimeRange] = useState<TimeRange>(initialState.timeRange);
   const [selectedArtwork, setSelectedArtwork] = useState<Artwork | null>(null);
   const [showResults, setShowResults] = useState(false);
   const [resultsData, setResultsData] = useState<{
@@ -29,7 +31,7 @@ function App() {
     location?: string;
     movement?: string;
     artist?: string;
-  }>({});
+  }>(initialState.chatQuery);
 
   // Use the custom hook to fetch artworks from database
   const { 
@@ -43,6 +45,44 @@ function App() {
     movement: chatQuery.movement,
     artist: chatQuery.artist
   });
+
+  // Handle URL parameter changes and browser back/forward navigation
+  useEffect(() => {
+    const urlParams = parseURLParams();
+
+    const hasURLParams = urlParams.location || urlParams.start || urlParams.end;
+
+    if (hasURLParams && !loading && dbArtworks.length > 0 && !showResults) {
+      if (urlParams.location) {
+        const queryTimeRange = {
+          start: urlParams.start || 1400,
+          end: urlParams.end || 2024
+        };
+        handleLocationTimeUpdate(urlParams.location, queryTimeRange);
+      }
+    }
+  }, [loading, dbArtworks, showResults]);
+
+  // Update URL when filters change
+  useEffect(() => {
+    const urlParams = {
+      location: chatQuery.location,
+      start: timeRange.start !== 1400 ? timeRange.start : undefined,
+      end: timeRange.end !== 2024 ? timeRange.end : undefined,
+      artist: chatQuery.artist,
+      movement: chatQuery.movement
+    };
+    
+    // Only update URL if there are actual parameters to set
+    const hasParams = Object.values(urlParams).some(value => value !== undefined);
+    
+    if (hasParams) {
+      updateURL(urlParams, true); // Use replace to avoid cluttering browser history
+    } else {
+      // Clear URL parameters if no filters are active
+      window.history.replaceState({}, '', window.location.pathname);
+    }
+  }, [timeRange, chatQuery]);
 
   const filteredArtworks = useMemo(() => {
     return dbArtworks.filter(artwork => {
@@ -91,13 +131,17 @@ function App() {
   };
 
   const handleLocationTimeSelect = async (location: string, currentTimeRange: TimeRange) => {
-    const locationArtworks = await getArtworksByLocation(location, currentTimeRange);
-    setResultsData({
-      artworks: locationArtworks,
-      location,
-      timeRange: currentTimeRange
-    });
-    setShowResults(true);
+    try {
+      const locationArtworks = await getArtworksByLocation(location, currentTimeRange);
+      setResultsData({
+        artworks: locationArtworks,
+        location,
+        timeRange: currentTimeRange
+      });
+      setShowResults(true);
+    } catch (error) {
+      console.error('Error fetching location artworks:', error);
+    }
   };
 
   // Generate dynamic SEO data based on current state
@@ -106,7 +150,7 @@ function App() {
     let description = "History-in-Art 是一款将 全球艺术作品 与 历史时空探索 融合的智能交互平台，旨在帮助用户在地理与时间的双重维度中发现、研究与欣赏艺术。通过 交互式世界地图 和 时间轴浏览，用户可以从古代文明到现代艺术，跨越数千年历史，探索各大洲、各国、各城市的绘画、雕塑与其他艺术形式。内置的 AI 艺术助手。内置的 AI 时空信息助手 精准聚焦于作品的年代背景与地域分布，让用户在地图与时间轴上高效开展时空艺术探索。History-in-Art 都能让您在沉浸式的可视化体验中了解作品的历史背景、创作故事与文化价值。适合艺术爱好者、历史学者、教育工作者以及希望通过艺术了解世界的人士，是一个兼具学习、研究与灵感发现的艺术导航平台。";
     let keywords = "艺术品,艺术导航,世界艺术,历史艺术,艺术地图,艺术时间轴,文艺复兴,巴洛克,印象派,现代艺术";
     let robots = "index, follow";
-    
+
     if (chatQuery.location || chatQuery.movement || chatQuery.artist) {
       const filters = [];
       if (chatQuery.location) filters.push(chatQuery.location);
