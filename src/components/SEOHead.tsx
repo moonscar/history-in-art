@@ -15,7 +15,7 @@ interface SEOHeadProps {
 }
 
 const SEOHead: React.FC<SEOHeadProps> = ({
-  title = "History-in-Art - 跨越时间与地域的艺术探索 | 发现世界艺术瑰宝",
+  title = "History-in-Art - 通过艺术品重新发现历史，探索时间与地理的交汇点",
   description = "History-in-Art 是一款将 全球艺术作品 与 历史时空探索 融合的智能交互平台，旨在帮助用户在地理与时间的双重维度中发现、研究与欣赏艺术。通过 交互式世界地图 和 时间轴浏览，用户可以从古代文明到现代艺术，跨越数千年历史，探索各大洲、各国、各城市的绘画、雕塑与其他艺术形式。内置的 AI 艺术助手。内置的 AI 时空信息助手 精准聚焦于作品的年代背景与地域分布，让用户在地图与时间轴上高效开展时空艺术探索。History-in-Art 都能让您在沉浸式的可视化体验中了解作品的历史背景、创作故事与文化价值。适合艺术爱好者、历史学者、教育工作者以及希望通过艺术了解世界的人士，是一个兼具学习、研究与灵感发现的艺术导航平台。",
   keywords = "艺术品,艺术导航,世界艺术,历史艺术,艺术地图,艺术时间轴,文艺复兴,巴洛克,印象派,现代艺术",
   image = "https://images.pexels.com/photos/1563356/pexels-photo-1563356.jpeg?auto=compress&cs=tinysrgb&w=1200",
@@ -23,7 +23,11 @@ const SEOHead: React.FC<SEOHeadProps> = ({
   type = "website",
   structuredData,
   canonical,
-  hreflang = [],
+  hreflang = [
+    { lang: "zh-CN", url: "https://history-in-art.org" },
+    { lang: "en", url: "https://history-in-art.org/en" },
+    { lang: "x-default", url: "https://history-in-art.org" }
+  ],
   robots = "index, follow"
 }) => {
   return (
