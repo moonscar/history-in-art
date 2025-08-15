@@ -613,47 +613,6 @@ const InteractiveWorldMap: React.FC<InteractiveWorldMapProps> = ({
 
       {/* Updated Map Legend */}
       <div className="absolute bottom-6 left-6 z-20 bg-black/80 backdrop-blur-sm rounded-xl p-4 shadow-2xl">
-{/*        <h3 className="text-white font-medium mb-3 text-sm">
-          {showHeatmap ? '国家热力图' : '艺术时期'}
-        </h3>*/}
-        
-        {showHeatmap ? (
-          <div className="space-y-2 text-xs">
-            <div className="text-gray-400 mb-2">根据艺术品数量着色</div>
-            {[
-              { count: '0', color: '#374151', label: '无艺术品' },
-              { count: '1', color: '#3B82F6', label: '1件艺术品' },
-              { count: '2', color: '#10B981', label: '2件艺术品' },
-              { count: '3', color: '#F59E0B', label: '3件艺术品' },
-              { count: '4+', color: '#EF4444', label: '4件以上' }
-            ].map(({ count, color, label }) => (
-              <div key={count} className="flex items-center text-gray-300">
-                <div
-                  className="w-4 h-3 mr-2 border border-gray-600"
-                  style={{ backgroundColor: color }}
-                ></div>
-                {label}
-              </div>
-            ))}
-          </div>
-        ) : (
-          <div className="grid grid-cols-2 gap-2 text-xs">
-            {[
-              { period: 'Renaissance', color: '#D69E2E' },
-              { period: 'Baroque', color: '#C53030' },
-              { period: 'Modern', color: '#805AD5' },
-              { period: 'Contemporary', color: '#E53E3E' }
-            ].map(({ period, color }) => (
-              <div key={period} className="flex items-center text-gray-300">
-                <div
-                  className="w-3 h-3 rounded-full mr-2 border border-white"
-                  style={{ backgroundColor: color }}
-                ></div>
-                {period}
-              </div>
-            ))}
-          </div>
-        )}
         
         <div className="mt-3 text-xs text-gray-400 border-t border-gray-600 pt-2">
           {showHeatmap ? '点击国家查看艺术品' : '点击地图显示城市 • 点击城市名查询艺术品'}
