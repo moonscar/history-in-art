@@ -1,0 +1,105 @@
+{
+  "app": {
+    "title": "History in Art",
+    "subtitle": "Art as eyes, witness history",
+    "artworksFound": "artworks found",
+    "timeRange": "Time Range",
+    "updating": "Updating...",
+    "loadingArtworks": "Loading Artworks",
+    "fetchingData": "Fetching data from database...",
+    "databaseError": "Database Connection Error",
+    "databaseErrorMessage": "Please make sure Supabase is properly configured. Click the \"Connect to Supabase\" button in the top right to set up your database connection.",
+    "footer": "© 2025 History in Art. Rediscovering history through works of art by time and geography."
+  },
+  "timeline": {
+    "title": "Historical Timeline",
+    "periods": {
+      "ancient": "Ancient",
+      "medieval": "Medieval", 
+      "renaissance": "Renaissance",
+      "baroque": "Baroque",
+      "neoclassical": "Neoclassical",
+      "impressionism": "Impressionism",
+      "modern": "Modern",
+      "contemporary": "Contemporary"
+    }
+  },
+  "chat": {
+    "title": "AI Art Assistant",
+    "welcomeMessage": "I am your art time machine, I can only take you to specific eras and places.\n\nFor example:\n\"Russia during the French Revolution\"\n\"China during Newton's era\"\n\nEnter time and place, and we'll depart immediately.",
+    "placeholder": "For example: Show Renaissance paintings from Italy, or find 19th century French Impressionist works...",
+    "send": "Send",
+    "online": "Online"
+  },
+  "map": {
+    "locations": "locations",
+    "loadingMap": "Loading world map...",
+    "heatmapTitle": "Heatmap - Artwork Count",
+    "artPeriods": "Art Periods",
+    "noArtworks": "No artworks",
+    "oneArtwork": "1 artwork",
+    "twoArtworks": "2 artworks", 
+    "threeArtworks": "3 artworks",
+    "fourPlusArtworks": "4+ artworks",
+    "coloredByCount": "Colored by artwork count",
+    "clickCountry": "Click countries to view artworks",
+    "clickMap": "Click map to show cities • Click city names to query artworks",
+    "queryArtworks": "Query artworks in this area",
+    "viewArtworks": "View artworks",
+    "totalCountries": "Total",
+    "countriesWithArtworks": "countries/regions have artworks",
+    "maxValue": "Max value",
+    "clickedLocation": "Clicked location",
+    "showHeatmap": "Show heatmap",
+    "hideHeatmap": "Hide heatmap"
+  },
+  "results": {
+    "title": "Search Results",
+    "artworks": "artworks",
+    "filtersAndSort": "Filters and Sort",
+    "reset": "Reset",
+    "artMovement": "Art Movement",
+    "artist": "Artist",
+    "sortBy": "Sort By",
+    "byYear": "By Year",
+    "byTitle": "By Title", 
+    "byArtist": "By Artist",
+    "allMovements": "All Movements",
+    "allArtists": "All Artists",
+    "noArtworksFound": "No matching artworks found",
+    "adjustFilters": "Please try adjusting the filter conditions or search again."
+  },
+  "artwork": {
+    "artist": "Artist",
+    "yearCreated": "Year Created",
+    "location": "Location",
+    "artMovement": "Art Movement",
+    "description": "Description",
+    "medium": "Medium",
+    "viewInGallery": "View in Virtual Gallery",
+    "unknownArtist": "Unknown Artist",
+    "unknownPeriod": "Unknown Period",
+    "unknownCountry": "Unknown Country",
+    "unknownCity": "Unknown City",
+    "unknownMovement": "Unknown Movement",
+    "unknownMedium": "Unknown Medium",
+    "noDescription": "No description available"
+  },
+  "common": {
+    "close": "Close",
+    "loading": "Loading",
+    "error": "Error",
+    "search": "Search",
+    "filter": "Filter",
+    "all": "All",
+    "none": "None",
+    "items": "items",
+    "piece": "piece",
+    "pieces": "pieces"
+  },
+  "language": {
+    "switch": "Switch Language",
+    "english": "English",
+    "chinese": "中文"
+  }
+}

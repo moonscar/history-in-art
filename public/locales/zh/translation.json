@@ -1,0 +1,105 @@
+{
+  "app": {
+    "title": "艺术中的历史",
+    "subtitle": "艺术为眼，见证历史",
+    "artworksFound": "件艺术品",
+    "timeRange": "时间范围",
+    "updating": "更新中...",
+    "loadingArtworks": "加载艺术品",
+    "fetchingData": "从数据库获取数据...",
+    "databaseError": "数据库连接错误",
+    "databaseErrorMessage": "请确保 Supabase 已正确配置。点击右上角的"连接到 Supabase"按钮来设置数据库连接。",
+    "footer": "© 2025 艺术中的历史。通过时间和地理重新发现艺术中的历史。"
+  },
+  "timeline": {
+    "title": "历史时间轴",
+    "periods": {
+      "ancient": "古代",
+      "medieval": "中世纪",
+      "renaissance": "文艺复兴",
+      "baroque": "巴洛克",
+      "neoclassical": "新古典主义",
+      "impressionism": "印象派",
+      "modern": "现代",
+      "contemporary": "当代"
+    }
+  },
+  "chat": {
+    "title": "AI 艺术品助手",
+    "welcomeMessage": "我是你的艺术时光机，只能带你去特定的年代与地方。\n\n例如：\n\"法国大革命时期的俄罗斯\"\n\"牛顿时代的中国\"\n\n输入时间与地点，我们立刻出发。",
+    "placeholder": "例如：显示文艺复兴时期意大利的画作，或查找19世纪法国印象派作品...",
+    "send": "发送",
+    "online": "在线"
+  },
+  "map": {
+    "locations": "个地点",
+    "loadingMap": "加载世界地图...",
+    "heatmapTitle": "热力图 - 艺术品数量",
+    "artPeriods": "艺术时期",
+    "noArtworks": "无艺术品",
+    "oneArtwork": "1件艺术品",
+    "twoArtworks": "2件艺术品",
+    "threeArtworks": "3件艺术品", 
+    "fourPlusArtworks": "4件以上",
+    "coloredByCount": "根据艺术品数量着色",
+    "clickCountry": "点击国家查看艺术品",
+    "clickMap": "点击地图显示城市 • 点击城市名查询艺术品",
+    "queryArtworks": "查询该地区艺术品",
+    "viewArtworks": "查看艺术品",
+    "totalCountries": "总计",
+    "countriesWithArtworks": "个国家/地区有艺术品",
+    "maxValue": "最大值",
+    "clickedLocation": "点击的位置",
+    "showHeatmap": "显示热力图",
+    "hideHeatmap": "隐藏热力图"
+  },
+  "results": {
+    "title": "搜索结果",
+    "artworks": "件作品",
+    "filtersAndSort": "筛选和排序",
+    "reset": "重置",
+    "artMovement": "艺术流派",
+    "artist": "艺术家",
+    "sortBy": "排序方式",
+    "byYear": "按年代",
+    "byTitle": "按标题",
+    "byArtist": "按艺术家",
+    "allMovements": "所有流派",
+    "allArtists": "所有艺术家",
+    "noArtworksFound": "未找到匹配的艺术品",
+    "adjustFilters": "请尝试调整筛选条件或重新搜索。"
+  },
+  "artwork": {
+    "artist": "艺术家",
+    "yearCreated": "创作年份",
+    "location": "地点",
+    "artMovement": "艺术流派",
+    "description": "描述",
+    "medium": "媒介",
+    "viewInGallery": "在虚拟画廊中查看",
+    "unknownArtist": "未知艺术家",
+    "unknownPeriod": "未知时期",
+    "unknownCountry": "未知国家",
+    "unknownCity": "未知城市",
+    "unknownMovement": "未知流派",
+    "unknownMedium": "未知媒介",
+    "noDescription": "暂无描述"
+  },
+  "common": {
+    "close": "关闭",
+    "loading": "加载中",
+    "error": "错误",
+    "search": "搜索",
+    "filter": "筛选",
+    "all": "全部",
+    "none": "无",
+    "items": "项",
+    "piece": "件",
+    "pieces": "件"
+  },
+  "language": {
+    "switch": "切换语言",
+    "english": "English",
+    "chinese": "中文"
+  }
+}
