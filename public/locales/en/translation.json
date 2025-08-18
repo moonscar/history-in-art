@@ -1,105 +1,103 @@
 {
-  "app": {
-    "title": "History in Art",
-    "subtitle": "Art as eyes, witness history",
+  "site": {
+    "title": "History-in-Art - Rediscovering History Through Art, Exploring the Intersection of Time and Geography",
+    "name": "History in Art",
+    "tagline": "Art as eyes, witness history",
+    "description": "History-in-Art is an intelligent interactive platform that integrates global artworks with historical spatio-temporal exploration, designed to help users discover, research, and appreciate art in both geographical and temporal dimensions. Through interactive world maps and timeline browsing, users can explore paintings, sculptures, and other art forms across continents, countries, and cities from ancient civilizations to modern art, spanning thousands of years of history. The built-in AI art assistant focuses precisely on the chronological background and geographical distribution of works, enabling users to efficiently conduct spatio-temporal art exploration on maps and timelines. History-in-Art allows you to understand the historical background, creation stories, and cultural values of works in an immersive visual experience. Suitable for art enthusiasts, historians, educators, and those who wish to understand the world through art, it is an art navigation platform that combines learning, research, and inspiration discovery."
+  },
+  "header": {
     "artworksFound": "artworks found",
-    "timeRange": "Time Range",
     "updating": "Updating...",
-    "loadingArtworks": "Loading Artworks",
-    "fetchingData": "Fetching data from database...",
-    "databaseError": "Database Connection Error",
-    "databaseErrorMessage": "Please make sure Supabase is properly configured. Click the \"Connect to Supabase\" button in the top right to set up your database connection.",
-    "footer": "© 2025 History in Art. Rediscovering history through works of art by time and geography."
+    "timeRange": "{{start}} - {{end}}"
+  },
+  "map": {
+    "title": "Interactive World Map",
+    "locations": "locations",
+    "heatmapTitle": "Heatmap - Artwork Count",
+    "noArtworks": "No artworks",
+    "artworkCount": "{{count}} artwork",
+    "artworkCountPlural": "{{count}} artworks",
+    "totalCountries": "Total: {{count}} countries/regions with artworks",
+    "maxCount": "Maximum: {{count}} artworks",
+    "clickCountry": "Click countries to view artworks",
+    "clickMap": "Click map to show cities • Click city names to query artworks",
+    "viewArtworks": "View Artworks",
+    "queryLocation": "Query artworks in this region",
+    "noArtworksFound": "No artworks found in {{city}}, {{country}} ({{start}}-{{end}})",
+    "clickedLocation": "Clicked location:",
+    "hideHeatmap": "Hide heatmap",
+    "showHeatmap": "Show heatmap",
+    "loadingMap": "Loading world map..."
   },
   "timeline": {
     "title": "Historical Timeline",
     "periods": {
-      "ancient": "Ancient",
-      "medieval": "Medieval", 
-      "renaissance": "Renaissance",
-      "baroque": "Baroque",
-      "neoclassical": "Neoclassical",
-      "impressionism": "Impressionism",
-      "modern": "Modern",
-      "contemporary": "Contemporary"
+      "Ancient": "Ancient",
+      "Medieval": "Medieval",
+      "Renaissance": "Renaissance", 
+      "Baroque": "Baroque",
+      "Neoclassical": "Neoclassical",
+      "Impressionism": "Impressionism",
+      "Modern": "Modern",
+      "Contemporary": "Contemporary"
     }
   },
   "chat": {
-    "title": "AI Art Assistant",
-    "welcomeMessage": "I am your art time machine, I can only take you to specific eras and places.\n\nFor example:\n\"Russia during the French Revolution\"\n\"China during Newton's era\"\n\nEnter time and place, and we'll depart immediately.",
-    "placeholder": "For example: Show Renaissance paintings from Italy, or find 19th century French Impressionist works...",
-    "send": "Send",
-    "online": "Online"
+    "title": "AI Assistant",
+    "placeholder": "e.g.: Show Renaissance paintings from Italy, or find 19th century French Impressionist works...",
+    "welcomeMessage": "I am your art time machine, capable of taking you to specific eras and places.\nFor example:\n\"Russia during the French Revolution\"\n\"China during Newton's era\"\nEnter time and place, and we'll depart immediately.",
+    "send": "Send"
   },
-  "map": {
-    "locations": "locations",
-    "loadingMap": "Loading world map...",
-    "heatmapTitle": "Heatmap - Artwork Count",
-    "artPeriods": "Art Periods",
-    "noArtworks": "No artworks",
-    "oneArtwork": "1 artwork",
-    "twoArtworks": "2 artworks", 
-    "threeArtworks": "3 artworks",
-    "fourPlusArtworks": "4+ artworks",
-    "coloredByCount": "Colored by artwork count",
-    "clickCountry": "Click countries to view artworks",
-    "clickMap": "Click map to show cities • Click city names to query artworks",
-    "queryArtworks": "Query artworks in this area",
-    "viewArtworks": "View artworks",
-    "totalCountries": "Total",
-    "countriesWithArtworks": "countries/regions have artworks",
-    "maxValue": "Max value",
-    "clickedLocation": "Clicked location",
-    "showHeatmap": "Show heatmap",
-    "hideHeatmap": "Hide heatmap"
+  "artwork": {
+    "title": "Artwork Title",
+    "artist": "Artist",
+    "year": "Creation Year",
+    "location": "Location",
+    "movement": "Art Movement",
+    "medium": "Medium",
+    "description": "Description",
+    "period": "Historical Period",
+    "viewInGoogle": "View in Google Arts & Culture",
+    "closeDetails": "Close artwork details"
   },
   "results": {
     "title": "Search Results",
-    "artworks": "artworks",
-    "filtersAndSort": "Filters and Sort",
+    "artworkCount": "{{count}} artworks",
+    "filters": "Filters and Sorting",
     "reset": "Reset",
-    "artMovement": "Art Movement",
+    "movement": "Art Movement",
     "artist": "Artist",
     "sortBy": "Sort By",
-    "byYear": "By Year",
-    "byTitle": "By Title", 
-    "byArtist": "By Artist",
+    "sortByYear": "By Year",
+    "sortByTitle": "By Title", 
+    "sortByArtist": "By Artist",
     "allMovements": "All Movements",
     "allArtists": "All Artists",
-    "noArtworksFound": "No matching artworks found",
-    "adjustFilters": "Please try adjusting the filter conditions or search again."
+    "noResults": "No matching artworks found",
+    "noResultsDesc": "Try adjusting your filter criteria or search again."
   },
-  "artwork": {
-    "artist": "Artist",
-    "yearCreated": "Year Created",
-    "location": "Location",
-    "artMovement": "Art Movement",
-    "description": "Description",
-    "medium": "Medium",
-    "viewInGallery": "View in Virtual Gallery",
-    "unknownArtist": "Unknown Artist",
-    "unknownPeriod": "Unknown Period",
-    "unknownCountry": "Unknown Country",
-    "unknownCity": "Unknown City",
-    "unknownMovement": "Unknown Movement",
-    "unknownMedium": "Unknown Medium",
-    "noDescription": "No description available"
+  "loading": {
+    "title": "Loading...",
+    "artworks": "Artwork data is loading, please wait...",
+    "fetchingData": "Fetching data from database..."
   },
-  "common": {
-    "close": "Close",
-    "loading": "Loading",
-    "error": "Error",
-    "search": "Search",
-    "filter": "Filter",
-    "all": "All",
-    "none": "None",
-    "items": "items",
-    "piece": "piece",
-    "pieces": "pieces"
+  "error": {
+    "databaseConnection": "Database Connection Error",
+    "description": "The website is loading, please try again later.",
+    "supabaseSetup": "Please make sure Supabase is properly configured. Click the \"Connect to Supabase\" button in the top right to set up your database connection."
+  },
+  "footer": {
+    "about": "About Us",
+    "privacy": "Privacy Policy",
+    "terms": "Terms of Service", 
+    "contact": "Contact Us",
+    "sitemap": "Sitemap",
+    "copyright": "© 2025 History in Art. Rediscovering history through works of art by time and geography.",
+    "subtitle": "Rediscovering history through artworks, exploring the intersection of time and geography"
   },
   "language": {
     "switch": "Switch Language",
-    "english": "English",
-    "chinese": "中文"
+    "chinese": "中文",
+    "english": "English"
   }
 }
