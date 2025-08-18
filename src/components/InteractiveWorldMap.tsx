@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { MapContainer, TileLayer, Marker, Popup, GeoJSON, useMapEvents } from 'react-leaflet';
 import L from 'leaflet';
 import { point } from '@turf/helpers';
@@ -152,6 +153,7 @@ const InteractiveWorldMap: React.FC<InteractiveWorldMapProps> = ({
   onLocationTimeSelect,
   onArtworkSelect
 }) => {
+  const { t } = useTranslation();
   const [mapLoaded, setMapLoaded] = useState(false);
   const [showHeatmap, setShowHeatmap] = useState(true);
   const [countryCounts, setCountryCounts] = useState<{ [country: string]: number }>({});
@@ -424,11 +426,11 @@ const InteractiveWorldMap: React.FC<InteractiveWorldMapProps> = ({
           <div className="flex items-center space-x-4 text-sm">
             <div className="flex items-center text-white">
               <MapPin size={16} className="mr-2 text-blue-400" />
-              <span className="font-medium">{Object.keys(artworksByLocation).length} locations</span>
+              <span className="font-medium">{Object.keys(artworksByLocation).length} {t('map.locations')}</span>
             </div>
             <div className="flex items-center text-gray-300">
               <Calendar size={16} className="mr-1 text-purple-400" />
-              {timeRange.start} - {timeRange.end}
+              {t('header.timeRange', { start: timeRange.start, end: timeRange.end })}
             </div>
           </div>
           <button
@@ -438,7 +440,7 @@ const InteractiveWorldMap: React.FC<InteractiveWorldMapProps> = ({
                 ? 'bg-blue-600 text-white' 
                 : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
             }`}
-            title={showHeatmap ? '隐藏热力图' : '显示热力图'}
+            title={showHeatmap ? t('map.hideHeatmap') : t('map.showHeatmap')}
           >
             <BarChart3 size={16} />
           </button>
@@ -446,7 +448,7 @@ const InteractiveWorldMap: React.FC<InteractiveWorldMapProps> = ({
 
         {showHeatmap && (
           <div className="border-t border-gray-600 pt-3">
-            <div className="text-xs text-gray-400 mb-2">热力图 - 艺术品数量</div>
+            <div className="text-xs text-gray-400 mb-2">{t('map.heatmapTitle')}</div>
             <div className="grid grid-cols-2 gap-1 text-xs">
               {legendData.map((item, index) => (
                 <div key={index} className="flex items-center text-gray-300">
@@ -457,8 +459,8 @@ const InteractiveWorldMap: React.FC<InteractiveWorldMapProps> = ({
             </div>
             {maxCount > 0 && (
               <div className="text-gray-400 text-xs mt-2 space-y-1">
-                <div>总计: {counts.length} 个国家/地区有艺术品</div>
-                <div>最大值: {maxCount} 件</div>
+                <div>{t('map.totalCountries', { count: counts.length })}</div>
+                <div>{t('map.maxCount', { count: maxCount })}</div>
               </div>
             )}
           </div>
@@ -466,7 +468,7 @@ const InteractiveWorldMap: React.FC<InteractiveWorldMapProps> = ({
 
         {clickedLocation && (
           <div className="mt-2 pt-2 border-t border-gray-600">
-            <div className="text-xs text-gray-400 mb-1">点击的位置:</div>
+            <div className="text-xs text-gray-400 mb-1">{t('map.clickedLocation')}</div>
             <div className="text-sm text-blue-400">{clickedLocation.city}, {clickedLocation.country}</div>
           </div>
         )}
@@ -528,7 +530,7 @@ const InteractiveWorldMap: React.FC<InteractiveWorldMapProps> = ({
                     onClick={handleCityClick}
                     className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 px-3 rounded-lg text-sm font-medium transition-colors"
                   >
-                    查询该地区艺术品
+                    {t('map.queryLocation')}
                   </button>
                 </div>
               </Popup>
@@ -591,7 +593,7 @@ const InteractiveWorldMap: React.FC<InteractiveWorldMapProps> = ({
                         onClick={() => handleLocationClick(locationArtworks)}
                         className="w-full mt-3 bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg text-sm font-medium transition-colors"
                       >
-                        查看该地区艺术品 ({locationArtworks.length})
+                        {t('map.viewArtworks')} ({locationArtworks.length})
                       </button>
                     </div>
                   </Popup>
@@ -605,7 +607,7 @@ const InteractiveWorldMap: React.FC<InteractiveWorldMapProps> = ({
           <div className="absolute inset-0 bg-gray-800 flex items-center justify-center">
             <div className="text-center">
               <div className="w-8 h-8 border-2 border-blue-400 border-t-transparent rounded-full animate-spin mx-auto mb-2"></div>
-              <p className="text-gray-400 text-sm">Loading world map...</p>
+              <p className="text-gray-400 text-sm">{t('map.loadingMap')}</p>
             </div>
           </div>
         )}
@@ -615,7 +617,7 @@ const InteractiveWorldMap: React.FC<InteractiveWorldMapProps> = ({
       <div className="absolute bottom-6 left-6 z-20 bg-black/80 backdrop-blur-sm rounded-xl p-4 shadow-2xl">
         
         <div className="mt-3 text-xs text-gray-400 border-t border-gray-600 pt-2">
-          {showHeatmap ? '点击国家查看艺术品' : '点击地图显示城市 • 点击城市名查询艺术品'}
+          {showHeatmap ? t('map.clickCountry') : t('map.clickMap')}
         </div>
       </div>
     </div>

@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Send, MessageCircle, Bot, User, ChevronDown, ChevronUp } from 'lucide-react';
 import { OpenAIService } from '../services/openaiService';
 
@@ -20,15 +21,16 @@ interface ChatInterfaceProps {
 }
 
 const ChatInterface: React.FC<ChatInterfaceProps> = ({ onQueryUpdate, onLocationTimeUpdate }) => {
+  const { t } = useTranslation();
   const [isExpanded, setIsExpanded] = useState(true);
   const [messages, setMessages] = useState<Message[]>([
     {
       id: '1',
       text: "我是你的艺术时光机，只能带你去特定的年代与地方。\
 例如：\n\
-“法国大革命时期的俄罗斯” \n\
 “牛顿时代的中国” \n\
 输入时间与地点，我们立刻出发。",
+      text: t('chat.welcomeMessage'),
       sender: 'bot',
       timestamp: new Date()
     }
@@ -124,7 +126,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ onQueryUpdate, onLocation
       >
         <div className="flex items-center space-x-2">
           <MessageCircle size={20} className="text-blue-400" />
-          <h3 className="text-white font-medium text-sm">AI 艺术品助手</h3>
+          <h3 className="text-white font-medium text-sm">{t('chat.title')}</h3>
         </div>
         <div className="flex items-center space-x-2">
           <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
@@ -197,7 +199,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ onQueryUpdate, onLocation
                 value={inputText}
                 onChange={(e) => setInputText(e.target.value)}
                 onKeyPress={handleKeyPress}
-                placeholder="例如：显示文艺复兴时期意大利的画作，或查找19世纪法国印象派作品..."
+                placeholder={t('chat.placeholder')}
                 className="flex-1 bg-gray-800 text-white rounded-lg px-4 py-2 border border-gray-600 focus:border-blue-500 focus:outline-none text-sm"
                 disabled={isLoading}
               />
@@ -205,6 +207,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ onQueryUpdate, onLocation
                 onClick={handleSendMessage}
                 disabled={!inputText.trim() || isLoading}
                 className="bg-blue-600 hover:bg-blue-700 disabled:bg-gray-600 text-white rounded-lg px-4 py-2 transition-colors"
+                title={t('chat.send')}
               >
                 <Send size={16} />
               </button>

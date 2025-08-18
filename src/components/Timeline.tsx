@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { TimeRange, HistoricalPeriod } from '../types';
 import { historicalPeriods } from '../data/periods';
 
@@ -8,6 +9,7 @@ interface TimelineProps {
 }
 
 const Timeline: React.FC<TimelineProps> = ({ timeRange, onTimeRangeChange }) => {
+  const { t } = useTranslation();
   const [isDragging, setIsDragging] = useState<'start' | 'end' | null>(null);
   const timelineRef = useRef<HTMLDivElement>(null);
   
@@ -60,7 +62,7 @@ const Timeline: React.FC<TimelineProps> = ({ timeRange, onTimeRangeChange }) => 
       <div className="flex items-center justify-between mb-4">
         <h2 className="text-lg font-bold text-white flex items-center">
           <div className="w-2 h-2 bg-purple-400 rounded-full mr-2"></div>
-          Historical Timeline
+          {t('timeline.title')}
         </h2>
         <div className="text-sm text-gray-300">
           <span className="text-blue-400 font-medium">{timeRange.start}</span> - <span className="text-purple-400 font-medium">{timeRange.end}</span>
@@ -89,7 +91,7 @@ const Timeline: React.FC<TimelineProps> = ({ timeRange, onTimeRangeChange }) => 
                 minWidth: '60px'
               }}
             >
-              {period.name}
+              {t(`timeline.periods.${period.name}`, period.name)}
             </div>
           ))}
           

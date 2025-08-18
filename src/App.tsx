@@ -1,8 +1,10 @@
 import React, { useState, useMemo, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Artwork, TimeRange } from './types';
 import { useArtworks } from './hooks/useArtworks';
 import { parseURLParams, updateURL, getInitialStateFromURL } from './utils/urlParams';
 import SEOHead from './components/SEOHead';
+import LanguageSwitcher from './components/LanguageSwitcher';
 import { 
   generateWebsiteStructuredData, 
   generateCollectionStructuredData,
@@ -17,6 +19,7 @@ import ResultsModal from './components/ResultsModal';
 import { Globe, Clock, Palette, AlertCircle } from 'lucide-react';
 
 function App() {
+  const { t, i18n } = useTranslation();
   const initialState = getInitialStateFromURL();
   const [timeRange, setTimeRange] = useState<TimeRange>(initialState.timeRange);
   const [selectedArtwork, setSelectedArtwork] = useState<Artwork | null>(null);
@@ -146,9 +149,11 @@ function App() {
 
   // Generate dynamic SEO data based on current state
   const generateDynamicSEO = () => {
-    let title = "History-in-Art - 通过艺术品重新发现历史，探索时间与地理的交汇点";
-    let description = "History-in-Art 是一款将 全球艺术作品 与 历史时空探索 融合的智能交互平台，旨在帮助用户在地理与时间的双重维度中发现、研究与欣赏艺术。通过 交互式世界地图 和 时间轴浏览，用户可以从古代文明到现代艺术，跨越数千年历史，探索各大洲、各国、各城市的绘画、雕塑与其他艺术形式。内置的 AI 艺术助手。内置的 AI 时空信息助手 精准聚焦于作品的年代背景与地域分布，让用户在地图与时间轴上高效开展时空艺术探索。History-in-Art 都能让您在沉浸式的可视化体验中了解作品的历史背景、创作故事与文化价值。适合艺术爱好者、历史学者、教育工作者以及希望通过艺术了解世界的人士，是一个兼具学习、研究与灵感发现的艺术导航平台。";
-    let keywords = "艺术品,艺术导航,世界艺术,历史艺术,艺术地图,艺术时间轴,文艺复兴,巴洛克,印象派,现代艺术";
+    let title = t('site.title');
+    let description = t('site.description');
+    let keywords = i18n.language === 'zh' 
+      ? "艺术品,艺术导航,世界艺术,历史艺术,艺术地图,艺术时间轴,文艺复兴,巴洛克,印象派,现代艺术"
+      : "artwork,art navigation,world art,historical art,art map,art timeline,renaissance,baroque,impressionism,modern art";
     let robots = "index, follow";
 
     if (chatQuery.location || chatQuery.movement || chatQuery.artist) {
@@ -157,12 +162,24 @@ function App() {
       if (chatQuery.movement) filters.push(chatQuery.movement);
       if (chatQuery.artist) filters.push(chatQuery.artist);
       
-      title = `${filters.join(' ')} 艺术作品 | History in Art`;
-      description = `探索${filters.join('、')}相关的艺术作品，发现${timeRange.start}-${timeRange.end}年间的艺术珍品。`;
+      const siteName = t('site.name');
+      if (i18n.language === 'zh') {
+        title = `${filters.join(' ')} 艺术作品 | ${siteName}`;
+        description = `探索${filters.join('、')}相关的艺术作品，发现${timeRange.start}-${timeRange.end}年间的艺术珍品。`;
+      } else {
+        title = `${filters.join(' ')} Artworks | ${siteName}`;
+        description = `Explore artworks related to ${filters.join(', ')}, discover art treasures from ${timeRange.start}-${timeRange.end}.`;
+      }
       keywords = `${filters.join(',')},${keywords}`;
     } else if (timeRange.start !== 1400 || timeRange.end !== 2024) {
-      title = `${timeRange.start}-${timeRange.end}年艺术作品 | History in Art`;
-      description = `探索${timeRange.start}-${timeRange.end}年间的世界艺术作品，通过交互式地图和时间轴发现历史艺术珍品。`;
+      const siteName = t('site.name');
+      if (i18n.language === 'zh') {
+        title = `${timeRange.start}-${timeRange.end}年艺术作品 | ${siteName}`;
+        description = `探索${timeRange.start}-${timeRange.end}年间的世界艺术作品，通过交互式地图和时间轴发现历史艺术珍品。`;
+      } else {
+        title = `${timeRange.start}-${timeRange.end} Artworks | ${siteName}`;
+        description = `Explore world artworks from ${timeRange.start}-${timeRange.end}, discover historical art treasures through interactive maps and timelines.`;
+      }
     }
     
     return { title, description, keywords, robots };
@@ -177,19 +194,19 @@ function App() {
   
   // Generate breadcrumb data
   const breadcrumbItems = [
-    { name: "首页", url: "https://history-in-art.org" }
+    { name: i18n.language === 'zh' ? "首页" : "Home", url: "https://history-in-art.org" }
   ];
   
   if (chatQuery.location) {
     breadcrumbItems.push({ 
-      name: `${chatQuery.location}艺术品`, 
+      name: i18n.language === 'zh' ? `${chatQuery.location}艺术品` : `${chatQuery.location} Artworks`, 
       url: `https://history-in-art.org?location=${encodeURIComponent(chatQuery.location)}` 
     });
   }
   
   if (timeRange.start !== 1400 || timeRange.end !== 2024) {
     breadcrumbItems.push({ 
-      name: `${timeRange.start}-${timeRange.end}年`, 
+      name: `${timeRange.start}-${timeRange.end}${i18n.language === 'zh' ? '年' : ''}`, 
       url: `https://history-in-art.org?start=${timeRange.start}&end=${timeRange.end}` 
     });
   }
@@ -200,8 +217,8 @@ function App() {
   
   // Generate hreflang for international SEO (future preparation)
   const hreflangLinks = [
-    { lang: "zh-CN", url: "https://history-in-art.org" },
-    { lang: "en", url: "https://history-in-art.org/en" },
+    { lang: "zh-CN", url: `https://history-in-art.org?lng=zh` },
+    { lang: "en", url: `https://history-in-art.org?lng=en` },
     { lang: "x-default", url: "https://history-in-art.org" }
   ];
 
@@ -210,17 +227,18 @@ function App() {
     return (
       <>
         <SEOHead 
-          title="加载中... | History in Art" 
-          description="艺术品数据正在加载中，请稍候..." 
+          title={`${t('loading.title')} | ${t('site.name')}`}
+          description={t('loading.artworks')}
           keywords={keywords} 
           structuredData={websiteData}
           robots="noindex, nofollow"
+          currentLanguage={i18n.language}
         />
         <div className="min-h-screen bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900 flex items-center justify-center">
           <div className="text-center">
             <div className="w-16 h-16 border-4 border-blue-400 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-            <h2 className="text-2xl font-bold text-white mb-2">Loading Artworks</h2>
-            <p className="text-gray-300">Fetching data from database...</p>
+            <h2 className="text-2xl font-bold text-white mb-2">{t('loading.title')}</h2>
+            <p className="text-gray-300">{t('loading.fetchingData')}</p>
           </div>
         </div>
       </>
@@ -232,19 +250,20 @@ function App() {
     return (
       <>
         <SEOHead 
-          title="数据库连接错误 | History in Art" 
-          description="网站正在加载中，请稍后再试。" 
+          title={`${t('error.databaseConnection')} | ${t('site.name')}`}
+          description={t('error.description')}
           keywords={keywords} 
           structuredData={websiteData}
           robots="noindex, nofollow"
+          currentLanguage={i18n.language}
         />
         <div className="min-h-screen bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900 flex items-center justify-center">
           <div className="text-center max-w-md">
             <AlertCircle size={64} className="text-red-400 mx-auto mb-4" />
-            <h2 className="text-2xl font-bold text-white mb-2">Database Connection Error</h2>
+            <h2 className="text-2xl font-bold text-white mb-2">{t('error.databaseConnection')}</h2>
             <p className="text-gray-300 mb-4">{error}</p>
             <p className="text-sm text-gray-400">
-              Please make sure Supabase is properly configured. Click the "Connect to Supabase" button in the top right to set up your database connection.
+              {t('error.supabaseSetup')}
             </p>
           </div>
         </div>
@@ -261,6 +280,7 @@ function App() {
         structuredData={allStructuredData}
         robots={robots}
         hreflang={hreflangLinks}
+        currentLanguage={i18n.language}
       />
       <div className="min-h-screen bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900">
         {/* Header */}
@@ -272,24 +292,25 @@ function App() {
                   <Palette size={24} className="text-white" />
                 </div>
                 <div>
-                  <h1 className="text-2xl font-bold text-white">History in Art</h1>
-                  <p className="text-gray-300 text-sm">Art as eyes, witness history</p>
+                  <h1 className="text-2xl font-bold text-white">{t('site.name')}</h1>
+                  <p className="text-gray-300 text-sm">{t('site.tagline')}</p>
                 </div>
               </div>
               
-              <div className="flex items-center space-x-6 text-sm text-gray-300">
+              <div className="flex items-center space-x-4 text-sm text-gray-300">
+                <LanguageSwitcher />
                 <div className="flex items-center">
                   <Globe size={16} className="mr-1 text-blue-400" />
-                  {filteredArtworks.length} artworks found
+                  {filteredArtworks.length} {t('header.artworksFound')}
                 </div>
                 <div className="flex items-center">
                   <Clock size={16} className="mr-1 text-purple-400" />
-                  {timeRange.start} - {timeRange.end}
+                  {t('header.timeRange', { start: timeRange.start, end: timeRange.end })}
                 </div>
                 {loading && (
                   <div className="flex items-center">
                     <div className="w-3 h-3 border border-blue-400 border-t-transparent rounded-full animate-spin mr-2"></div>
-                    <span className="text-blue-400">Updating...</span>
+                    <span className="text-blue-400">{t('header.updating')}</span>
                   </div>
                 )}
                 {chatQuery.location && (
@@ -306,7 +327,7 @@ function App() {
         {/* Main Content */}
         <main className="relative" role="main">
           {/* Full-screen Map */}
-          <section className="h-[calc(100vh-80px)] relative" aria-label="Interactive World Map">
+          <section className="h-[calc(100vh-80px)] relative" aria-label={t('map.title')}>
             <InteractiveWorldMap
               artworks={filteredArtworks}
               timeRange={timeRange}
@@ -315,7 +336,7 @@ function App() {
             />
             
             {/* Floating Timeline */}
-            <aside className="absolute bottom-6 left-6 right-6 z-20" aria-label="Historical Timeline">
+            <aside className="absolute bottom-6 left-6 right-6 z-20" aria-label={t('timeline.title')}>
               <Timeline
                 timeRange={timeRange}
                 onTimeRangeChange={setTimeRange}
@@ -323,7 +344,7 @@ function App() {
             </aside>
             
             {/* Floating Chat Interface */}
-            <aside className="absolute top-6 right-6 z-20 w-80" aria-label="AI Assistant">
+            <aside className="absolute top-6 right-6 z-20 w-80" aria-label={t('chat.title')}>
               <ChatInterface
                 onQueryUpdate={handleChatQuery}
                 onLocationTimeUpdate={handleLocationTimeUpdate}
@@ -354,16 +375,16 @@ function App() {
           <div className="max-w-7xl mx-auto px-4 py-6">
             <nav className="mb-4" aria-label="Footer navigation">
               <ul className="flex flex-wrap justify-center space-x-6 text-sm text-gray-400">
-                <li><a href="#" className="hover:text-white transition-colors">关于我们</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">隐私政策</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">使用条款</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">联系我们</a></li>
-                <li><a href="/sitemap.xml" className="hover:text-white transition-colors">网站地图</a></li>
+                <li><a href="#" className="hover:text-white transition-colors">{t('footer.about')}</a></li>
+                <li><a href="#" className="hover:text-white transition-colors">{t('footer.privacy')}</a></li>
+                <li><a href="#" className="hover:text-white transition-colors">{t('footer.terms')}</a></li>
+                <li><a href="#" className="hover:text-white transition-colors">{t('footer.contact')}</a></li>
+                <li><a href="/sitemap.xml" className="hover:text-white transition-colors">{t('footer.sitemap')}</a></li>
               </ul>
             </nav>
             <div className="text-center text-gray-400 text-sm">
-              <p>© 2025 History in Art. Rediscovering history through works of art by time and geography.</p>
-              <p className="mt-2">通过艺术品重新发现历史，探索时间与地理的交汇点</p>
+              <p>{t('footer.copyright')}</p>
+              <p className="mt-2">{t('footer.subtitle')}</p>
             </div>
           </div>
         </footer>

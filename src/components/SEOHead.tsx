@@ -12,6 +12,7 @@ interface SEOHeadProps {
   canonical?: string;
   hreflang?: Array<{ lang: string; url: string }>;
   robots?: string;
+  currentLanguage?: string;
 }
 
 const SEOHead: React.FC<SEOHeadProps> = ({
@@ -28,7 +29,8 @@ const SEOHead: React.FC<SEOHeadProps> = ({
     { lang: "en", url: "https://history-in-art.org/en" },
     { lang: "x-default", url: "https://history-in-art.org" }
   ],
-  robots = "index, follow"
+  robots = "index, follow",
+  currentLanguage = "zh"
 }) => {
   return (
     <Helmet>
@@ -40,7 +42,7 @@ const SEOHead: React.FC<SEOHeadProps> = ({
       <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       
       {/* Language and region */}
-      <html lang="zh-CN" />
+      <html lang={currentLanguage === 'zh' ? 'zh-CN' : 'en'} />
       
       {/* Open Graph */}
       <meta property="og:title" content={title} />
