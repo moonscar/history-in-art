@@ -242,7 +242,7 @@ const InteractiveWorldMap: React.FC<InteractiveWorldMapProps> = ({
     // 无数据
     labels.push({
       color: colors[0],
-      label: '无艺术品',
+      label: t('map.noArtworks'),
       range: [0, 0]
     });
 
@@ -253,9 +253,11 @@ const InteractiveWorldMap: React.FC<InteractiveWorldMapProps> = ({
       
       let label: string;
       if (i === breakpoints.length - 1) {
-        label = `${start}+ 件`;
+        // label = `${start}+ 件`;
+        label = t("map.artworkCount", { count: start });
       } else {
-        label = start === end ? `${start} 件` : `${start}-${end} 件`;
+        // label = start === end ? `${start} 件` : `${start}-${end} 件`;
+        label = start === end ? t("map.artworkCount", { count: start }) : t("map.artworkCount", { count: `${start} - ${end}`});
       }
       
       labels.push({
