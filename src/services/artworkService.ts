@@ -12,7 +12,7 @@ const convertToArtwork = (row: ArtworkRow): Artwork => ({
   title: row.title,
   artist: row.artist_name || 'Unknown Artist',
   year: row.creation_year || 0,
-  period: row.period || 'Unknown Period',
+  period: row.period || '',
   location: {
     country: row.country || 'Unknown Country',
     city: row.city || 'Unknown City',
