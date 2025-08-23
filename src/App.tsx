@@ -385,7 +385,7 @@ function App() {
                 <li><a href="#" className="hover:text-white transition-colors">{t('footer.about')}</a></li>
                 <li><a href="#" className="hover:text-white transition-colors">{t('footer.privacy')}</a></li>
                 <li><a href="#" className="hover:text-white transition-colors">{t('footer.terms')}</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">{t('footer.contact')}</a></li>
+                <li><a href="mailto:feedback@history-in-art.org?subject=Feedback&body=Current URL: %0D%0A%0D%0APage: History-in-Art%0D%0A%0D%0AFeedback:" className="hover:text-white transition-colors">{t('footer.contact')}</a></li>
                 <li><a href="/sitemap.xml" className="hover:text-white transition-colors">{t('footer.sitemap')}</a></li>
               </ul>
             </nav>
