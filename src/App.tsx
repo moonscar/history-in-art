@@ -133,6 +133,13 @@ function App() {
     }, 500); // 给时间让筛选条件先更新
   };
 
+  const handleResultsClose = () => {
+    setShowResults(false);
+    setChatQuery({ timeRange: timeRange });
+    setTimeRange({ start: 1400, end: 2024 });
+    window.history.replaceState({}, '', window.location.pathname);
+  };
+
   const handleLocationTimeSelect = async (location: string, currentTimeRange: TimeRange) => {
     try {
       const locationArtworks = await getArtworksByLocation(location, currentTimeRange);
@@ -358,7 +365,7 @@ function App() {
               artworks={resultsData.artworks}
               location={resultsData.location}
               timeRange={resultsData.timeRange}
-              onClose={() => setShowResults(false)}
+              onClose={handleResultsClose}
               onArtworkSelect={setSelectedArtwork}
             />
           )}
