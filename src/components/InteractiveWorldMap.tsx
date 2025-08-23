@@ -297,7 +297,7 @@ const InteractiveWorldMap: React.FC<InteractiveWorldMapProps> = ({
     const center = bounds.getCenter();
     
     try {
-      const { country } = await getLocationFromCoordinates(center.lat, center.lng);
+      const { country, city } = await getLocationFromCoordinates(center.lat, center.lng);
       const count = countryCounts[country] || countryCounts[feature.properties.NAME] || 0;
 
       if (count > 0) {

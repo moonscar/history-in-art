@@ -1,5 +1,8 @@
 interface ChatResponse {
-  location?: string;
+  location?: {
+    country: string;
+    city: string 
+  };
   timeRange?: {
     start: number;
     end: number;
@@ -36,7 +39,7 @@ export class OpenAIService {
 
       // 先处理数据赋值
       if (apiResponse.country) {
-        result.location = apiResponse.country;
+        result.location = {country: apiResponse.country, city: apiResponse.city};
       }
 
       const startYear = this.parseTimeToYear(apiResponse.start_time);

@@ -22,6 +22,7 @@ export interface TimeRange {
 
 export interface Location {
   country: string;
+  city: string;
   coordinates: [number, number];
   artworkCount: number;
 }

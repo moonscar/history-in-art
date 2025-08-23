@@ -13,11 +13,11 @@ interface Message {
 interface ChatInterfaceProps {
   onQueryUpdate: (params: {
     timeRange?: { start: number; end: number };
-    location?: string;
+    location?: { country: string; city: string };
     movement?: string;
     artist?: string;
   }) => void;
-  onLocationTimeUpdate?: (location: string, timeRange: { start: number; end: number }) => void;
+  onLocationTimeUpdate?: (location: { country: string; city: string }, timeRange: { start: number; end: number }) => void;
 }
 
 const ChatInterface: React.FC<ChatInterfaceProps> = ({ onQueryUpdate, onLocationTimeUpdate }) => {

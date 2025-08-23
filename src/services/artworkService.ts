@@ -258,12 +258,12 @@ export class ArtworkService {
   }
 
   // Get artworks by location
-  static async getArtworksByLocation(country: string, timeRange?: TimeRange): Promise<Artwork[]> {
+  static async getArtworksByLocation(location: { country: string; city: string }, timeRange?: TimeRange): Promise<Artwork[]> {
     try {
       let query = supabase
         .from('artworks')
         .select('*')
-        .eq('country', country)
+        .eq('country', location.country)
         .order('creation_year', { ascending: true });
 
       if (timeRange) {

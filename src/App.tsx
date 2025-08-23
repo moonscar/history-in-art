@@ -26,12 +26,12 @@ function App() {
   const [showResults, setShowResults] = useState(false);
   const [resultsData, setResultsData] = useState<{
     artworks: Artwork[];
-    location?: string;
+    location?: { country: string; city: string };
     timeRange?: TimeRange;
   }>({ artworks: [] });
   const [chatQuery, setChatQuery] = useState<{
     timeRange?: TimeRange;
-    location?: string;
+    location?: { country: string; city: string };
     movement?: string;
     artist?: string;
   }>(initialState.chatQuery);
@@ -100,7 +100,7 @@ function App() {
 
   const handleChatQuery = (params: {
     timeRange?: TimeRange;
-    location?: string;
+    location?: { country: string; city: string };
     movement?: string;
     artist?: string;
   }) => {
@@ -110,7 +110,7 @@ function App() {
     }
   };
 
-  const handleLocationTimeUpdate = (location: string, timeRange: TimeRange) => {
+  const handleLocationTimeUpdate = (location: { country: string; city: string }, timeRange: TimeRange) => {
     // 更新时间轴
     setTimeRange(timeRange);
     
@@ -140,7 +140,7 @@ function App() {
     window.history.replaceState({}, '', window.location.pathname);
   };
 
-  const handleLocationTimeSelect = async (location: string, currentTimeRange: TimeRange) => {
+  const handleLocationTimeSelect = async (location: { country: string; city: string }, currentTimeRange: TimeRange) => {
     try {
       const locationArtworks = await getArtworksByLocation(location, currentTimeRange);
       setResultsData({
@@ -322,7 +322,7 @@ function App() {
                 )}
                 {chatQuery.location && (
                   <div className="bg-blue-600 text-white px-2 py-1 rounded-full text-xs">
-                    {chatQuery.location}
+                    {chatQuery.location.country}
                   </div>
                 )}
               </div>
