@@ -1,10 +1,10 @@
 import { useState, useEffect, useCallback } from 'react';
-import { Artwork, TimeRange } from '../types';
+import { Artwork, TimeRange, Location } from '../types';
 import { ArtworkService } from '../services/artworkService';
 
 interface UseArtworksOptions {
   timeRange?: TimeRange;
-  country?: string;
+  location?: Location;
   movement?: string;
   artist?: string;
   autoFetch?: boolean;
@@ -17,7 +17,7 @@ interface UseArtworksReturn {
   totalCount: number;
   refetch: () => Promise<void>;
   searchArtworks: (searchTerm: string) => Promise<void>;
-  getArtworksByLocation: (country: string, timeRange?: TimeRange) => Promise<Artwork[]>;
+  getArtworksByLocation: (location: Location, timeRange?: TimeRange) => Promise<Artwork[]>;
 }
 
 export const useArtworks = (options: UseArtworksOptions = {}): UseArtworksReturn => {
@@ -33,7 +33,7 @@ export const useArtworks = (options: UseArtworksOptions = {}): UseArtworksReturn
     try {
       const result = await ArtworkService.getArtworks({
         timeRange: options.timeRange,
-        country: options.country,
+        location: options.location,
         movement: options.movement,
         artist: options.artist,
         limit: 100 // Reasonable limit for initial load
@@ -47,7 +47,7 @@ export const useArtworks = (options: UseArtworksOptions = {}): UseArtworksReturn
     } finally {
       setLoading(false);
     }
-  }, [options.timeRange, options.country, options.movement, options.artist]);
+  }, [options.timeRange, options.location, options.movement, options.artist]);
 
   const searchArtworks = useCallback(async (searchTerm: string) => {
     if (!searchTerm.trim()) {
@@ -70,9 +70,10 @@ export const useArtworks = (options: UseArtworksOptions = {}): UseArtworksReturn
     }
   }, [fetchArtworks]);
 
-  const getArtworksByLocation = useCallback(async (country: string, timeRange?: TimeRange): Promise<Artwork[]> => {
+  const getArtworksByLocation = useCallback(async (location: Location, timeRange?: TimeRange): Promise<Artwork[]> => {
     try {
-      return await ArtworkService.getArtworksByLocation(country, timeRange);
+      console.log("Debug in hook", location);
+      return await ArtworkService.getArtworksByLocation(location, timeRange);
     } catch (err) {
       console.error('Error fetching artworks by location:', err);
       return [];

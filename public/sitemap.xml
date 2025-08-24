@@ -13,44 +13,44 @@
     <xhtml:link rel="alternate" hreflang="x-default" href="https://history-in-art.org/" />
   </url>
   
-  <!-- Location-based pages -->
+  <!-- country-based pages -->
   <url>
-    <loc>https://history-in-art.org?location=Italy</loc>
+    <loc>https://history-in-art.org?country=Italy</loc>
     <lastmod>2025-01-27</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   
   <url>
-    <loc>https://history-in-art.org?location=France</loc>
+    <loc>https://history-in-art.org?country=France</loc>
     <lastmod>2025-01-27</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   
   <url>
-    <loc>https://history-in-art.org?location=Netherlands</loc>
+    <loc>https://history-in-art.org?country=Netherlands</loc>
     <lastmod>2025-01-27</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   
   <url>
-    <loc>https://history-in-art.org?location=Spain</loc>
+    <loc>https://history-in-art.org?country=Spain</loc>
     <lastmod>2025-01-27</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   
   <url>
-    <loc>https://history-in-art.org?location=Japan</loc>
+    <loc>https://history-in-art.org?country=Japan</loc>
     <lastmod>2025-01-27</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   
   <url>
-    <loc>https://history-in-art.org?location=United%20States</loc>
+    <loc>https://history-in-art.org?country=United%20States</loc>
     <lastmod>2025-01-27</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
@@ -85,23 +85,23 @@
     <priority>0.7</priority>
   </url>
   
-  <!-- Combined location and time period pages -->
+  <!-- Combined country and time period pages -->
   <url>
-    <loc>https://history-in-art.org?location=Italy&amp;start=1400&amp;end=1600</loc>
+    <loc>https://history-in-art.org?country=Italy&amp;start=1400&amp;end=1600</loc>
     <lastmod>2025-01-27</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
-    <loc>https://history-in-art.org?location=France&amp;start=1850&amp;end=1900</loc>
+    <loc>https://history-in-art.org?country=France&amp;start=1850&amp;end=1900</loc>
     <lastmod>2025-01-27</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
-    <loc>https://history-in-art.org?location=Netherlands&amp;start=1600&amp;end=1750</loc>
+    <loc>https://history-in-art.org?country=Netherlands&amp;start=1600&amp;end=1750</loc>
     <lastmod>2025-01-27</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>

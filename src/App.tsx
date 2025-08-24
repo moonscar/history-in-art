@@ -44,48 +44,47 @@ function App() {
     getArtworksByLocation 
   } = useArtworks({
     timeRange,
-    country: chatQuery.location,
+    location: chatQuery.location,
     movement: chatQuery.movement,
     artist: chatQuery.artist
   });
 
-  // Handle URL parameter changes and browser back/forward navigation
+
   useEffect(() => {
     const urlParams = parseURLParams();
+    const hasValidParams = urlParams.country || urlParams.artist || urlParams.movement || 
+                          urlParams.start || urlParams.end;
+    
+    if (!hasValidParams) return;
 
-    const hasURLParams = urlParams.country || urlParams.city || urlParams.start || urlParams.end;
+    const location = urlParams.country ? {
+      country: urlParams.country || '',
+      city: urlParams.city || ''
+    } : undefined;
+    
+    const queryTimeRange = {
+      start: urlParams.start || 1400,
+      end: urlParams.end || 2024
+    };
 
-    if (hasURLParams && !loading && dbArtworks.length > 0 && !showResults) {
-      if (urlParams.location) {
+    setChatQuery({
+      location,
+      artist: urlParams.artist,
+      movement: urlParams.movement,
+      timeRange: queryTimeRange
+    });
+    
+    setTimeRange(queryTimeRange);
+
+    // 延迟执行自动查询，确保数据已加载
+    if (location && dbArtworks.length > 0) {
         const queryTimeRange = {
           start: urlParams.start || 1400,
           end: urlParams.end || 2024
         };
-        handleLocationTimeUpdate(urlParams.location, queryTimeRange);
-      }
+        handleLocationTimeUpdate(location, queryTimeRange);
     }
-  }, [loading, dbArtworks, showResults]);
-
-  // Update URL when filters change
-  useEffect(() => {
-    const urlParams = {
-      location: chatQuery.location,
-      start: timeRange.start !== 1400 ? timeRange.start : undefined,
-      end: timeRange.end !== 2024 ? timeRange.end : undefined,
-      artist: chatQuery.artist,
-      movement: chatQuery.movement
-    };
-    
-    // Only update URL if there are actual parameters to set
-    const hasParams = Object.values(urlParams).some(value => value !== undefined);
-    
-    if (hasParams) {
-      updateURL(urlParams, true); // Use replace to avoid cluttering browser history
-    } else {
-      // Clear URL parameters if no filters are active
-      window.history.replaceState({}, '', window.location.pathname);
-    }
-  }, [timeRange, chatQuery]);
+  }, [dbArtworks.length > 0]); // 修复依赖数组
 
   const filteredArtworks = useMemo(() => {
     return dbArtworks.filter(artwork => {

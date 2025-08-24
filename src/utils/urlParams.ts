@@ -103,14 +103,22 @@ export const updateURL = (params: URLParams, replace: boolean = false) => {
 // Get initial state from URL parameters
 export const getInitialStateFromURL = () => {
   const urlParams = parseURLParams();
-  
+    
+  let location = undefined;
+  if (urlParams.country || urlParams.city) {
+    location = {
+      country: urlParams.country || '',
+      city: urlParams.city || ''
+    };
+  }
+
   return {
     timeRange: {
       start: urlParams.start || 1400,
       end: urlParams.end || 2024
     },
     chatQuery: {
-      location: {country: urlParams.country, city: urlParams.city},
+      location,
       artist: urlParams.artist,
       movement: urlParams.movement,
       timeRange: (urlParams.start || urlParams.end) ? {

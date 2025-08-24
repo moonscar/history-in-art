@@ -1,6 +1,6 @@
 import { supabase } from '../lib/supabase';
 import { Database } from '../lib/database.types';
-import { Artwork, TimeRange } from '../types';
+import { Artwork, TimeRange, Location } from '../types';
 
 type ArtworkRow = Database['public']['Tables']['artworks']['Row'];
 type ArtworkInsert = Database['public']['Tables']['artworks']['Insert'];
@@ -46,7 +46,7 @@ export class ArtworkService {
   // Get all artworks with optional filters
   static async getArtworks(filters?: {
     timeRange?: TimeRange;
-    country?: string;
+    location?: Location;
     movement?: string;
     artist?: string;
     limit?: number;
@@ -66,8 +66,8 @@ export class ArtworkService {
           .lte('creation_year', filters.timeRange.end);
       }
 
-      if (filters?.country) {
-        query = query.eq('country', filters.country);
+      if (filters?.location) {
+        query = query.eq('country', filters.location.country);
       }
 
       if (filters?.artist) {
@@ -124,112 +124,6 @@ export class ArtworkService {
     }
   }
 
-  // Create new artwork
-  static async createArtwork(artwork: Partial<Artwork>): Promise<Artwork | null> {
-    try {
-      const insertData = convertToInsert(artwork);
-      
-      const { data, error } = await supabase
-        .from('artworks')
-        .insert(insertData)
-        .select()
-        .single();
-
-      if (error) {
-        console.error('Error creating artwork:', error);
-        throw error;
-      }
-
-      return data ? convertToArtwork(data) : null;
-    } catch (error) {
-      console.error('Error in createArtwork:', error);
-      return null;
-    }
-  }
-
-  // Update artwork
-  static async updateArtwork(id: string, updates: Partial<Artwork>): Promise<Artwork | null> {
-    try {
-      const updateData = convertToInsert(updates);
-      
-      const { data, error } = await supabase
-        .from('artworks')
-        .update(updateData)
-        .eq('id', id)
-        .select()
-        .single();
-
-      if (error) {
-        console.error('Error updating artwork:', error);
-        throw error;
-      }
-
-      return data ? convertToArtwork(data) : null;
-    } catch (error) {
-      console.error('Error in updateArtwork:', error);
-      return null;
-    }
-  }
-
-  // Delete artwork
-  static async deleteArtwork(id: string): Promise<boolean> {
-    try {
-      const { error } = await supabase
-        .from('artworks')
-        .delete()
-        .eq('id', id);
-
-      if (error) {
-        console.error('Error deleting artwork:', error);
-        return false;
-      }
-
-      return true;
-    } catch (error) {
-      console.error('Error in deleteArtwork:', error);
-      return false;
-    }
-  }
-
-  // Get artwork counts by country for heatmap
-  // static async getArtworkCountsByCountry(filters?: {
-  //   timeRange?: TimeRange;
-  // }): Promise<{ [country: string]: number }> {
-  //   try {
-  //     let query = supabase
-  //       .from('artworks')
-  //       .select('country, count(*)')
-  //       .not('country', 'is', null);
-
-  //     // Apply time range filter if provided
-  //     if (filters?.timeRange) {
-  //       query = query
-  //         .gte('creation_year', filters.timeRange.start)
-  //         .lte('creation_year', filters.timeRange.end);
-  //     }
-
-  //     const { data, error } = await query;
-
-  //     if (error) {
-  //       console.error('Error fetching artwork counts by country:', error);
-  //       return {};
-  //     }
-
-  //     // Count artworks by country
-  //     const countryCounts: { [country: string]: number } = {};
-  //     data.forEach(item => {
-  //       if (item.country) {
-  //         countryCounts[item.country] = (countryCounts[item.country] || 0) + 1;
-  //       }
-  //     });
-
-  //     return countryCounts;
-  //   } catch (error) {
-  //     console.error('Error in getArtworkCountsByCountry:', error);
-  //     return {};
-  //   }
-  // }
-
   static async getArtworkCountsByCountry(filters?: {
     timeRange?: TimeRange;
   }): Promise<{ [country: string]: number }> {
@@ -259,11 +153,13 @@ export class ArtworkService {
 
   // Get artworks by location
   static async getArtworksByLocation(location: Location, timeRange?: TimeRange): Promise<Artwork[]> {
+    console.log("getArtworksByLocation", location);
     try {
       let artworks: Artwork[] = [];
 
       // 1. 如果有city参数且不为空，先尝试按city查询
       if (location.city && location.city.trim()) {
+        console.log("Debug, here is city", location.city);
         let cityQuery = supabase
           .from('artworks')
           .select('*')
@@ -288,6 +184,7 @@ export class ArtworkService {
       }
 
       // 2. city为空或city查询无结果时，按country查询
+      console.log("Debug, here is country", location.country);
       let countryQuery = supabase
         .from('artworks')
         .select('*')
