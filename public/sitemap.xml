@@ -5,7 +5,7 @@
   <!-- Main pages -->
   <url>
     <loc>https://history-in-art.org/</loc>
-    <lastmod>2025-01-27</lastmod>
+    <lastmod>2025-08-24</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
     <xhtml:link rel="alternate" hreflang="zh-CN" href="https://history-in-art.org/" />
@@ -16,95 +16,66 @@
   <!-- country-based pages -->
   <url>
     <loc>https://history-in-art.org?country=Italy</loc>
-    <lastmod>2025-01-27</lastmod>
+    <lastmod>2025-08-24</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://history-in-art.org?country=France</loc>
-    <lastmod>2025-01-27</lastmod>
+    <lastmod>2025-08-24</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://history-in-art.org?country=Netherlands</loc>
-    <lastmod>2025-01-27</lastmod>
+    <lastmod>2025-08-24</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://history-in-art.org?country=Spain</loc>
-    <lastmod>2025-01-27</lastmod>
+    <lastmod>2025-08-24</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://history-in-art.org?country=Japan</loc>
-    <lastmod>2025-01-27</lastmod>
+    <lastmod>2025-08-24</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://history-in-art.org?country=United%20States</loc>
-    <lastmod>2025-01-27</lastmod>
+    <lastmod>2025-08-24</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  
-  <!-- Time period pages -->
-  <url>
-    <loc>https://history-in-art.org?start=1400&amp;end=1600</loc>
-    <lastmod>2025-01-27</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  
-  <url>
-    <loc>https://history-in-art.org?start=1600&amp;end=1750</loc>
-    <lastmod>2025-01-27</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  
-  <url>
-    <loc>https://history-in-art.org?start=1850&amp;end=1900</loc>
-    <lastmod>2025-01-27</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  
-  <url>
-    <loc>https://history-in-art.org?start=1900&amp;end=1980</loc>
-    <lastmod>2025-01-27</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
+    <priority>0.6</priority>
   </url>
   
   <!-- Combined country and time period pages -->
   <url>
     <loc>https://history-in-art.org?country=Italy&amp;start=1400&amp;end=1600</loc>
-    <lastmod>2025-01-27</lastmod>
+    <lastmod>2025-08-24</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.6</priority>
+    <priority>0.8</priority>
   </url>
   
   <url>
     <loc>https://history-in-art.org?country=France&amp;start=1850&amp;end=1900</loc>
-    <lastmod>2025-01-27</lastmod>
+    <lastmod>2025-08-24</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.6</priority>
+    <priority>0.8</priority>
   </url>
   
   <url>
     <loc>https://history-in-art.org?country=Netherlands&amp;start=1600&amp;end=1750</loc>
-    <lastmod>2025-01-27</lastmod>
+    <lastmod>2025-08-24</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.6</priority>
+    <priority>0.8</priority>
   </url>
   
 </urlset>
