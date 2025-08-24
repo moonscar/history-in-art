@@ -39,7 +39,10 @@ export class OpenAIService {
 
       // 先处理数据赋值
       if (apiResponse.country) {
-        result.location = {country: apiResponse.country, city: apiResponse.city};
+        result.location = {
+          country: apiResponse.country,
+          city: apiResponse.city
+        };
       }
 
       const startYear = this.parseTimeToYear(apiResponse.start_time);
@@ -56,7 +59,10 @@ export class OpenAIService {
       const extractedInfo = [];
 
       if (result.location) {
-        extractedInfo.push(`\n地点：${result.location}`);
+        const locationInfo = result.location.city && result.location.city.trim()
+          ? `\n地点：${result.location.country}, ${result.location.city}`
+          : `\n地点：${result.location.country}`;
+          extractedInfo.push(locationInfo);
       }
 
       if (result.timeRange) {
@@ -67,7 +73,6 @@ export class OpenAIService {
       }
 
       console.log(apiResponse);
-      console.log(extractedInfo.length, extractedInfo);
 
       if (extractedInfo.length > 0) {
         result.message = `已从您的输入中提取 ${extractedInfo.join('，')} 即将为您跳转到指定的时间地点查找相关艺术品数据...`;

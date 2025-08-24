@@ -13,11 +13,11 @@ interface Message {
 interface ChatInterfaceProps {
   onQueryUpdate: (params: {
     timeRange?: { start: number; end: number };
-    location?: { country: string; city: string };
+    location?: Location;
     movement?: string;
     artist?: string;
   }) => void;
-  onLocationTimeUpdate?: (location: { country: string; city: string }, timeRange: { start: number; end: number }) => void;
+  onLocationTimeUpdate?: (location: Location, timeRange: { start: number; end: number }) => void;
 }
 
 const ChatInterface: React.FC<ChatInterfaceProps> = ({ onQueryUpdate, onLocationTimeUpdate }) => {
@@ -26,10 +26,6 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ onQueryUpdate, onLocation
   const [messages, setMessages] = useState<Message[]>([
     {
       id: '1',
-      text: "我是你的艺术时光机，只能带你去特定的年代与地方。\
-例如：\n\
-“牛顿时代的中国” \n\
-输入时间与地点，我们立刻出发。",
       text: t('chat.welcomeMessage'),
       sender: 'bot',
       timestamp: new Date()
@@ -53,7 +49,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ onQueryUpdate, onLocation
     
     try {
       const aiResponse = await OpenAIService.processUserQuery(query);
-      
+
       // 构建查询参数
       const queryParams: any = {};
       
@@ -68,7 +64,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ onQueryUpdate, onLocation
       // 更新主界面筛选条件
       if (Object.keys(queryParams).length > 0) {
         onQueryUpdate(queryParams);
-        
+
         // 如果同时有地点和时间信息，触发地图和时间轴的联动更新
         if (aiResponse.location && aiResponse.timeRange && onLocationTimeUpdate) {
           onLocationTimeUpdate(aiResponse.location, aiResponse.timeRange);

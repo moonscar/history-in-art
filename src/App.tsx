@@ -1,6 +1,6 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Artwork, TimeRange } from './types';
+import { Artwork, TimeRange, Location } from './types';
 import { useArtworks } from './hooks/useArtworks';
 import { parseURLParams, updateURL, getInitialStateFromURL } from './utils/urlParams';
 import SEOHead from './components/SEOHead';
@@ -26,12 +26,12 @@ function App() {
   const [showResults, setShowResults] = useState(false);
   const [resultsData, setResultsData] = useState<{
     artworks: Artwork[];
-    location?: { country: string; city: string };
+    location?: Location;
     timeRange?: TimeRange;
   }>({ artworks: [] });
   const [chatQuery, setChatQuery] = useState<{
     timeRange?: TimeRange;
-    location?: { country: string; city: string };
+    location?: Location;
     movement?: string;
     artist?: string;
   }>(initialState.chatQuery);
@@ -53,7 +53,7 @@ function App() {
   useEffect(() => {
     const urlParams = parseURLParams();
 
-    const hasURLParams = urlParams.location || urlParams.start || urlParams.end;
+    const hasURLParams = urlParams.country || urlParams.city || urlParams.start || urlParams.end;
 
     if (hasURLParams && !loading && dbArtworks.length > 0 && !showResults) {
       if (urlParams.location) {
@@ -90,7 +90,7 @@ function App() {
   const filteredArtworks = useMemo(() => {
     return dbArtworks.filter(artwork => {
       const withinTimeRange = artwork.year >= timeRange.start && artwork.year <= timeRange.end;
-      const matchesLocation = !chatQuery.location || artwork.location.country === chatQuery.location;
+      const matchesLocation = !chatQuery.location || artwork.location.country === chatQuery.location.country;
       const matchesMovement = !chatQuery.movement || artwork.movement === chatQuery.movement;
       const matchesArtist = !chatQuery.artist || artwork.artist === chatQuery.artist;
       
@@ -100,7 +100,7 @@ function App() {
 
   const handleChatQuery = (params: {
     timeRange?: TimeRange;
-    location?: { country: string; city: string };
+    location?: Location;
     movement?: string;
     artist?: string;
   }) => {
@@ -110,7 +110,7 @@ function App() {
     }
   };
 
-  const handleLocationTimeUpdate = (location: { country: string; city: string }, timeRange: TimeRange) => {
+  const handleLocationTimeUpdate = (location: Location, timeRange: TimeRange) => {
     // 更新时间轴
     setTimeRange(timeRange);
     
@@ -140,7 +140,7 @@ function App() {
     window.history.replaceState({}, '', window.location.pathname);
   };
 
-  const handleLocationTimeSelect = async (location: { country: string; city: string }, currentTimeRange: TimeRange) => {
+  const handleLocationTimeSelect = async (location: Location, currentTimeRange: TimeRange) => {
     try {
       const locationArtworks = await getArtworksByLocation(location, currentTimeRange);
       setResultsData({

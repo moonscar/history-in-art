@@ -75,7 +75,10 @@ const ResultsModal: React.FC<ResultsModalProps> = ({
               {location && (
                 <div className="flex items-center">
                   <MapPin size={16} className="mr-1 text-blue-400" />
-                  {location}
+                  {location.city && location.city.trim() 
+                    ? `${location.country}, ${location.city}`
+                    : location.country
+                  }
                 </div>
               )}
               {timeRange && (

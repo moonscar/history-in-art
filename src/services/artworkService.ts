@@ -258,28 +258,57 @@ export class ArtworkService {
   }
 
   // Get artworks by location
-  static async getArtworksByLocation(location: { country: string; city: string }, timeRange?: TimeRange): Promise<Artwork[]> {
+  static async getArtworksByLocation(location: Location, timeRange?: TimeRange): Promise<Artwork[]> {
     try {
-      let query = supabase
+      let artworks: Artwork[] = [];
+
+      // 1. 如果有city参数且不为空，先尝试按city查询
+      if (location.city && location.city.trim()) {
+        let cityQuery = supabase
+          .from('artworks')
+          .select('*')
+          .eq('country', location.country)
+          .eq('city', location.city)
+          .order('creation_year', { ascending: true });
+
+        if (timeRange) {
+          cityQuery = cityQuery
+            .gte('creation_year', timeRange.start)
+            .lte('creation_year', timeRange.end);
+        }
+
+        const { data: cityData, error: cityError } = await cityQuery;
+        
+        if (cityError) {
+          console.error('Error fetching artworks by city:', cityError);
+        } else if (cityData && cityData.length > 0) {
+          // city查询有结果，直接返回
+          return cityData.map(convertToArtwork);
+        }
+      }
+
+      // 2. city为空或city查询无结果时，按country查询
+      let countryQuery = supabase
         .from('artworks')
         .select('*')
         .eq('country', location.country)
         .order('creation_year', { ascending: true });
 
       if (timeRange) {
-        query = query
+        countryQuery = countryQuery
           .gte('creation_year', timeRange.start)
           .lte('creation_year', timeRange.end);
       }
 
-      const { data, error } = await query;
-
-      if (error) {
-        console.error('Error fetching artworks by location:', error);
+      const { data: countryData, error: countryError } = await countryQuery;
+      
+      if (countryError) {
+        console.error('Error fetching artworks by country:', countryError);
         return [];
       }
 
-      return (data || []).map(convertToArtwork);
+      return (countryData || []).map(convertToArtwork);
+
     } catch (error) {
       console.error('Error in getArtworksByLocation:', error);
       return [];

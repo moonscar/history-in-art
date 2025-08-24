@@ -14,9 +14,14 @@ export const parseURLParams = (): URLParams => {
   const params: URLParams = {};
 
   // Parse location
-  const location = searchParams.get('location');
-  if (location) {
-    params.location = decodeURIComponent(location);
+  const country = searchParams.get('country', '');
+  if (country) {
+    params.country = decodeURIComponent(country);
+  }
+
+  const city = searchParams.get('city', '');
+  if (city) {
+    params.city = decodeURIComponent(city);
   }
 
   // Parse time range
@@ -56,8 +61,12 @@ export const parseURLParams = (): URLParams => {
 export const generateURLParams = (params: URLParams): string => {
   const searchParams = new URLSearchParams();
 
-  if (params.location) {
-    searchParams.set('location', params.location);
+  if (params.country) {
+    searchParams.set('country', params.country);
+  }
+
+  if (params.city) {
+    searchParams.set('city', params.city);
   }
 
   if (params.start !== undefined) {
@@ -101,7 +110,7 @@ export const getInitialStateFromURL = () => {
       end: urlParams.end || 2024
     },
     chatQuery: {
-      location: urlParams.location,
+      location: {country: urlParams.country, city: urlParams.city},
       artist: urlParams.artist,
       movement: urlParams.movement,
       timeRange: (urlParams.start || urlParams.end) ? {
@@ -117,7 +126,8 @@ export const validateURLParams = (expectedParams: URLParams): boolean => {
   const currentParams = parseURLParams();
   
   return (
-    currentParams.location === expectedParams.location &&
+    currentParams.country === expectedParams.country &&
+    currentParams.city === expectedParams.city &&
     currentParams.start === expectedParams.start &&
     currentParams.end === expectedParams.end &&
     currentParams.artist === expectedParams.artist &&
