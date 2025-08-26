@@ -170,6 +170,8 @@ const ResultsModal: React.FC<ResultsModalProps> = ({
 
         {/* Results */}
         <div className="p-6 overflow-y-auto" style={{ maxHeight: 'calc(90vh - 200px)' }}>
+          <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6333474665018049"
+               crossorigin="anonymous"></script>
           {filteredAndSortedArtworks.length === 0 ? (
             <div className="text-center py-12">
               <div className="w-16 h-16 bg-gray-700 rounded-full mx-auto mb-4 flex items-center justify-center">
